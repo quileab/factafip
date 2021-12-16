@@ -15,14 +15,18 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->smallInteger('doctype_id')->unsigned()->default(96);
+            $table->unsignedBigInteger('id_type');
             $table->string('name');
-            $table->smallInteger('city_id')->unsigned()->nullable();
-            $table->smallInteger('taxcondition_id')->unsigned()->nullable();
             $table->string('address')->nullable();
-            $table->string('city');
-            $table->string('phone')->nullable();
-            $table->string('email')->unique();
+            $table->string('city',80)->nullable();
+            $table->unsignedBigInteger('province_id');
+            $table->string('phone',40)->nullable();
+            $table->string('email',127)->unique();
+            $table->string('CUIT',11)->nullable();
+            $table->smallInteger('taxcondition_id')->unsigned()->nullable();
+            
+            $table->foreign('id_type')->references('id')->on('customer_id_types');
+            $table->foreign('province_id')->references('id')->on('province_id_types');
             $table->timestamps();
         });
     }
