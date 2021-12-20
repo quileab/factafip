@@ -1,3 +1,25 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+.form-label{
+  @apply block text-xs font-bold text-gray-700;
+}
+
+.d2c{
+  background: #e00b33;
+  background: linear-gradient(90deg, #e00b33 15%, #a1049f 100%);
+  text-shadow: 1px 1px 4px black;
+  font-size: large;
+  color: white !important;
+}
+.c2d{
+  background: #e00b33;
+  background: linear-gradient(0deg, #e00b33 15%, #a1049f 100%);
+  text-shadow: 1px 1px 4px black;
+  color: white !important;
+}
+
+select{
+  @apply my-1 px-2 py-2 border-gray-500 rounded-md shadow-sm bg-gray-50 text-gray-900
+}

@@ -6,12 +6,12 @@ $nav_links = [
       'active' => request()->routeIs('dashboard'),
       'permission'=>'menu.dashboard',
     ],
-    // [
-    //   'name' => 'Alumnos',
-    //   'route' => route('students'),
-    //   'active' => request()->routeIs('students'),
-    //   'permission'=>'menu.students',
-    // ],
+    [
+      'name' => 'Clientes',
+      'route' => route('customers.show'),
+      'active' => request()->routeIs('customers.show'),
+      'permission'=>'menu.customers',
+    ],
     // [
     //   'name' => 'Carreras',
     //   'route' => route('careers'),
@@ -211,12 +211,13 @@ $nav_links = [
 
       <nav class="text-gray-50">
         @foreach ($nav_links as $nav_link)
-          @can($nav_link['permission'])
+          {{-- @can($nav_link['permission']) --}}
             <x-jet-nav-link class="block w-full px-4 py-2" href="{{ $nav_link['route'] }}"
               :active="$nav_link['active']">
               {{ __($nav_link['name']) }}
-            </x-jet-nav-link><br />
-          @endcan
+            </x-jet-nav-link>
+            {{-- <br /> --}}
+          {{-- @endcan --}}
         @endforeach
       </nav>
 
@@ -224,15 +225,15 @@ $nav_links = [
 
     {{-- content --}}
     <div class="flex-1 py-0 mx-auto bg-gray-500">
+      {{-- float information --}}    
+      @livewire('assets.bookmark')
+      {{-- <livewire:'assets.bookmark'> --}}
       <!-- Page Content -->
       <main>
         {{ $slot }}
       </main>
     </div>
 
-    {{-- float information --}}    
-    @livewire('assets.bookmark')
-    {{-- <livewire:'assets.bookmark'> --}}
 
   </div>
   {{-- end qb template --}}
