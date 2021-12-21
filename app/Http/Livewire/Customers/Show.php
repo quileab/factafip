@@ -40,4 +40,11 @@ class Show extends Component
     {
         $this->readyToLoad = true;
     }
+
+    public function search()
+    {
+        $this->customers=\App\Models\Customer::where('name','like','%'.$this->search.'%')
+            ->orWhere('business_name','like','%'.$this->search.'%')
+            ->get();
+    }   
 }

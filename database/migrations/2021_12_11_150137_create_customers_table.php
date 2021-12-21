@@ -24,7 +24,7 @@ class CreateCustomersTable extends Migration
             $table->string('phone',40)->nullable();
             $table->string('email',127)->unique();
             $table->string('CUIT',11)->nullable();
-            $table->foreignIdFor(App\Models\TaxConditionType::class)->constrained();
+            $table->foreignIdFor(App\Models\ResponsibilityType::class)->constrained();
             
             //$table->foreign('id_type')->references('id')->on('customer_id_types');
             //$table->foreign('province_id')->references('id')->on('province_id_types');

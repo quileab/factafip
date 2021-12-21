@@ -17,8 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+// logged only routes
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::get('/customers/show', App\Http\Livewire\Customers\Show::class)->name('customers.show');
+    Route::get('/customers/show', App\Http\Livewire\Customers\Show::class)->name('customers.show');
+});

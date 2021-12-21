@@ -18,17 +18,17 @@
 
       Tipo
       <select wire:model.lazy="office" wire:change.lazy="officeChanged" name="office" id="office">
-          @foreach ($customers_id_type_id as $type_id)
-              <option value="{{ $type_id->id }}">
-                  {{ $type_id->value }}
-              </option>
-          @endforeach
+        @foreach ($customers_id_type_id as $type_id)
+          <option value="{{ $type_id->id }}">
+            {{ $type_id->value }}
+          </option>
+        @endforeach
       </select>
 
       <div class="flex">
         <div class="w-1/3 ml-3">
           <x-jet-label value="Apellido/s" />
-          <x-jet-input type='text' wire:model.lazy='lastname' value='{{ $lastname ?? ''}}' class="w-full" />
+          <x-jet-input type='text' wire:model.lazy='lastname' value='{{ $lastname ?? '' }}' class="w-full" />
           <x-jet-input-error for="lastname" />
         </div>
         <div class="w-2/3 ml-3">
@@ -110,23 +110,53 @@
   </x-jet-dialog-modal>
 
 
-<div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
-  <div class="m-2 overflow-hidden bg-gray-200 rounded-md shadow-xl">
-    <div class="flex justify-start px-3 py-2 text-white bg-gray-600">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-      </svg>
-      <div class="ml-4">
-        Clientes
+  <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
+    <div class="m-2 overflow-hidden bg-gray-200 rounded-md shadow-xl">
+      <div class="flex justify-between px-3 py-2 text-white bg-gray-600">
+        <div class="flex">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <div class="ml-4 text-lg">
+            Clientes
+          </div>
+        </div>
+        <x-jet-input wire:model.lazy="search" type="search" class="w-full mx-3" placeholder="Buscar..." />
+        
+        <x-jet-button wire:click="$set('openModal',true)">Nuevo</x-jet-button>
+      </div>
+      <div class="p-4">
+        {{-- show list of customers in table --}}
+        <table class="table-auto w-full">
+          <thead>
+            <tr>
+              <th class="px-4 py-2">Nombre</th>
+              <th class="px-4 py-2">Empresa</th>
+              <th class="px-4 py-2">Email</th>
+              <th class="px-4 py-2">Teléfono</th>
+              <th class="px-4 py-2">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($customers as $customer)
+              <tr>
+                <td class="border px-4 py-2">{{ $customer->name }}</td>
+                <td class="border px-4 py-2">{{ $customer->business_name }}</td>
+                <td class="border px-4 py-2">{{ $customer->email }}</td>
+                <td class="border px-4 py-2">{{ $customer->phone }}</td>
+                <td class="border px-4 py-2">
+                  <x-jet-button wire:click="edit({{ $customer->id }})" class="mr-2">Editar</x-jet-button>
+                  <x-jet-danger-button wire:click="delete({{ $customer->id }})" class="mr-2">Eliminar</x-jet-danger-button>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+
+
       </div>
     </div>
-    Customers
-
-
-    <x-jet-button wire:click="$set('openModal',true)">Modal</x-jet-button>
-
   </div>
-</div>
 </div>

@@ -225,12 +225,12 @@ $nav_links = [
 
     {{-- content --}}
     <div class="flex-1 py-0 mx-auto bg-gray-500">
-      {{-- float information --}}    
-      @livewire('assets.bookmark')
-      {{-- <livewire:'assets.bookmark'> --}}
       <!-- Page Content -->
       <main>
         {{ $slot }}
+        {{-- float information --}}    
+        @livewire('assets.bookmark')
+        {{-- <livewire:'assets.bookmark'> --}}
       </main>
     </div>
 
