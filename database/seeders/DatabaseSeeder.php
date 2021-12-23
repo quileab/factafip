@@ -21,5 +21,18 @@ class DatabaseSeeder extends Seeder
             'email'=>'admin@admin.com',
             'password'=>Hash::make('Sadmin12345'),
         ]);
+
+        \App\Models\Warehouse::truncate();
+        \App\Models\Warehouse::create([
+            'name'=>'Main',
+            'location'=>'This is the main warehouse',
+            'phone'=>'+254712345678',
+            'email'=>'this@email.com',
+            'contact_person'=>'Admin',
+        ]);
+
+        \App\Models\Category::create([
+            'name'=>'General',
+        ]);
     }
 }

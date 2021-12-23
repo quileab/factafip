@@ -8,81 +8,99 @@
 
     <x-slot name="content">
 
-      <div class="flex items-center">
-        <div class="w-1/3 ml-3">
+      <div class="flex">
+        <div class="w-full ml-3">
           <x-jet-label value="ID/DNI" />
-          <x-jet-input type="number" class="w-full" wire:model.defer='pid' />
-          <x-jet-input-error for="pid" />
+          <x-jet-input type="number" wire:model.defer='customer_id' class="w-full" />
+          <x-jet-input-error for="customer_id" />
+        </div>
+        <div class="w-full ml-3">
+          <x-jet-label value="Tipo" />
+          <select wire:model.lazy="customer_id_type" name="customer_id_type" id="customer_id_type">
+            @foreach ($customers_id_type_id as $type_id)
+              <option value="{{ $type_id->id }}">
+                {{ $type_id->id }}· {{ $type_id->value }}
+              </option>
+            @endforeach
+          </select>
         </div>
       </div>
 
-      Tipo
-      <select wire:model.lazy="office" wire:change.lazy="officeChanged" name="office" id="office">
-        @foreach ($customers_id_type_id as $type_id)
-          <option value="{{ $type_id->id }}">
-            {{ $type_id->value }}
-          </option>
-        @endforeach
-      </select>
+      <div class="flex w-full">
+        <div class="w-full ml-3">
+          <x-jet-label value="Apellido/s y Nombre/s" />
+          <x-jet-input type='text' wire:model.lazy='customer_name' value="{{ $customer_name ?? '' }}"
+            class="w-full" />
+          <x-jet-input-error for="customer_name" />
+        </div>
+        <div class="w-full ml-3">
+          <x-jet-label value="Nombre Empresa" />
+          <x-jet-input type='text' wire:model.lazy='customer_business_name'
+            value="{{ $customer_business_name ?? '' }}" class="w-full" />
+          <x-jet-input-error for="customer_business_name" />
+        </div>
+      </div>
 
       <div class="flex">
-        <div class="w-1/3 ml-3">
-          <x-jet-label value="Apellido/s" />
-          <x-jet-input type='text' wire:model.lazy='lastname' value='{{ $lastname ?? '' }}' class="w-full" />
-          <x-jet-input-error for="lastname" />
+        <div class="w-full ml-3">
+          <x-jet-label value="CUIT" />
+          <x-jet-input type='text' wire:model.lazy='customer_CUIT' value="{{ $customer_CUIT ?? '' }}"
+            class="w-full" />
+          <x-jet-input-error for="customer_CUIT" />
         </div>
-        <div class="w-2/3 ml-3">
-          <x-jet-label value="Nombre/s" />
-          <x-jet-input type='text' wire:model.lazy='firstname' value='{{ $name ?? '' }}' class="w-full" />
-          <x-jet-input-error for="firstname" />
+        <div class="w-full ml-3">
+          <x-jet-label value="Responsable tipo" />
+          <select wire:model.lazy="customer_responsibility_type_id" name="customer_responsibility_type_id"
+            id="customer_responsibility_type_id">
+            @foreach ($responsibility_types_id as $resp_type_id)
+              <option value="{{ $resp_type_id->id }}">
+                {{ $resp_type_id->id }}· {{ $resp_type_id->value }}
+              </option>
+            @endforeach
+          </select>
         </div>
       </div>
+
+      <div class="flex w-full">
+        <div class="w-full ml-3">
+          <x-jet-label value="Dirección" />
+          <x-jet-input type='text' wire:model.lazy='customer_address' value="{{ $customer_address ?? '' }}"
+            class="w-full" />
+          <x-jet-input-error for="customer_address" />
+        </div>
+        <div class="w-full ml-3">
+          <x-jet-label value="Ciudad" />
+          <x-jet-input type='text' wire:model.lazy='customer_city' value="{{ $customer_city ?? '' }}"
+            class="w-full" />
+          <x-jet-input-error for="customer_city" />
+        </div>
+      </div>
+
+      <div class="flex flex-col ml-3">
+        <x-jet-label value="Provincia" />
+        <select wire:model.lazy="customer_province_id" name="customer_province_id"
+          id="customer_province_id">
+          @foreach ($province_id_type_id as $province_type_id)
+            <option value="{{ $province_type_id->id }}">
+              {{ $province_type_id->id }}· {{ $province_type_id->value }}
+            </option>
+          @endforeach
+        </select>
+      </div>
+
 
       <div class="flex">
         <div class="w-full ml-3">
           <x-jet-label value="EMail" />
-          <x-jet-input type='email' wire:model.lazy='email' value='{{ $email ?? '' }}' class="w-full" />
-          <x-jet-input-error for="email" />
+          <x-jet-input type='email' wire:model.lazy='customer_email' value="{{ $customer_email ?? '' }}" class="w-full" />
+          <x-jet-input-error for="customer_email" />
         </div>
         <div class="w-full ml-3">
           <x-jet-label value="Teléfono" />
-          <x-jet-input type='tel' wire:model.lazy='phone' value='{{ $phone ?? '' }}' class="w-full" />
-          <x-jet-input-error for="phone" />
+          <x-jet-input type='tel' wire:model.lazy='customer_phone' value="{{ $customer_phone ?? '' }}" class="w-full" />
+          <x-jet-input-error for="customer_phone" />
         </div>
       </div>
-
-      {{-- @if ($updating)
-        <fieldset class="my-2 overflow-hidden bg-gray-500 rounded-md">
-          <legend class="p-1 px-2 bg-gray-500 rounded-md text-gray-50">Carreras</legend>
-          @foreach ($student_careers as $item)
-            <div class="flex justify-between mx-1 my-1 rounded-md bg-gradient-to-b from-gray-200 to-gray-300">
-              <span class="p-2">{{ $item->name }}</span>
-              <x-jet-button
-                wire:click="$emit('confirmDelete','{{ $item->name }}','{{ $item->id }}','deleteCareer')"
-                color="red" class="w-4/4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clip-rule="evenodd" />
-                </svg>
-              </x-jet-button>
-            </div>
-          @endforeach
-          <div class="flex items-center justify-between p-2">
-            <span class="text-gray-50">Agregar Carrera/s</span>
-            <select wire:model.lazy="career_id" name="career_id" id="career_id" class="bg-white">
-              @foreach ($careers as $career)
-                <option value="{{ $career->id }}">{{ $career->name }}</option>
-              @endforeach
-            </select>
-            <x-jet-button wire:click="addCareer">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-              </svg>&nbsp;Agregar</x-jet-button>
-          </div>
-        </fieldset>
-      @endif --}}
 
     </x-slot>
 
@@ -92,18 +110,15 @@
           Salir
         </x-jet-secondary-button>
 
-        {{-- @if ($formAction == 'store')
-          <x-jet-button wire:click="store" class="px-3 py-1 text-xs font-bold text-white rounded">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>&nbsp;Crear
-          </x-jet-button>
-        @else
-          <x-jet-button class="ml-2" wire:click="saveChange" wire:loading.attr="disabled">
+        @if ($updating == true)
+          <x-jet-button wire:click="update" class="px-3 py-1 text-xs font-bold text-white rounded">
             Modificar
           </x-jet-button>
-        @endif --}}
+        @else
+          <x-jet-button class="ml-2" wire:click="create" wire:loading.attr="disabled">
+            Guardar
+          </x-jet-button>
+        @endif
 
       </div>
     </x-slot>
@@ -124,31 +139,30 @@
           </div>
         </div>
         <x-jet-input wire:model.lazy="search" type="search" class="w-full mx-3" placeholder="Buscar..." />
-        
-        <x-jet-button wire:click="$set('openModal',true)">Nuevo</x-jet-button>
+
+        <x-jet-button wire:click="newCustomerModalShow">Nuevo</x-jet-button>
       </div>
       <div class="p-4">
         {{-- show list of customers in table --}}
         <table class="table-auto w-full">
           <thead>
-            <tr>
+            <tr class="bg-gray-800 text-white">
+              <th class="px-4 py-2">ID</th>
               <th class="px-4 py-2">Nombre</th>
               <th class="px-4 py-2">Empresa</th>
-              <th class="px-4 py-2">Email</th>
-              <th class="px-4 py-2">Teléfono</th>
               <th class="px-4 py-2">Acciones</th>
             </tr>
           </thead>
           <tbody>
             @foreach ($customers as $customer)
               <tr>
+                <td class="border px-4 py-2">{{ $customer->id }}</td>
                 <td class="border px-4 py-2">{{ $customer->name }}</td>
                 <td class="border px-4 py-2">{{ $customer->business_name }}</td>
-                <td class="border px-4 py-2">{{ $customer->email }}</td>
-                <td class="border px-4 py-2">{{ $customer->phone }}</td>
                 <td class="border px-4 py-2">
                   <x-jet-button wire:click="edit({{ $customer->id }})" class="mr-2">Editar</x-jet-button>
-                  <x-jet-danger-button wire:click="delete({{ $customer->id }})" class="mr-2">Eliminar</x-jet-danger-button>
+                  <x-jet-danger-button wire:click="delete({{ $customer->id }})" class="mr-2">Eliminar
+                  </x-jet-danger-button>
                 </td>
               </tr>
             @endforeach

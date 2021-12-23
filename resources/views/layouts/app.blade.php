@@ -8,22 +8,22 @@ $nav_links = [
     ],
     [
       'name' => 'Clientes',
-      'route' => route('customers.show'),
-      'active' => request()->routeIs('customers.show'),
+      'route' => route('customers'),
+      'active' => request()->routeIs('customers'),
       'permission'=>'menu.customers',
     ],
-    // [
-    //   'name' => 'Carreras',
-    //   'route' => route('careers'),
-    //   'active' => request()->routeIs('careers'),
-    //   'permission'=>'menu.careers',
-    // ],
-    // [
-    //   'name' => 'Inscripciones',
-    //   'route' => route('studentsinsc'),
-    //   'active' => request()->routeIs('studentsinsc'),
-    //   'permission'=>'menu.inscriptions',
-    // ],
+    [
+      'name' => 'Depósitos',
+      'route' => route('warehouses'),
+      'active' => request()->routeIs('warehouses'),
+      'permission'=>'menu.warehouses',
+    ],
+    [
+      'name' => 'Productos',
+      'route' => route('products'),
+      'active' => request()->routeIs('products'),
+      'permission'=>'menu.products',
+    ],
     // [
     //   'name' => 'Calendarios',
     //   'route' => route('calendars'),

@@ -19,9 +19,11 @@ Route::get('/', function () {
 
 // logged only routes
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/customers/show', App\Http\Livewire\Customers\Show::class)->name('customers.show');
+    Route::get('/customers/show', App\Http\Livewire\Customers\Show::class)->name('customers');
+    Route::get('/warehouses/show', App\Http\Livewire\Warehouses\Show::class)->name('warehouses');
+    Route::get('/products/show', App\Http\Livewire\Products\Show::class)->name('products');
 });

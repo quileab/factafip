@@ -21,7 +21,6 @@ class CreateProductsTable extends Migration
             $table->string('brand', 30)->nullable();
             $table->string('model', 30)->nullable();
             $table->string('description', 50);
-            $table->decimal('quantity',12,2)->default(0);
             $table->decimal('quantity_min',12,2)->default(0);
             $table->decimal('price',12,2)->default(0);
             $table->foreignIdFor(App\Models\TaxConditionType::class)->constrained();
