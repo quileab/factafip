@@ -1,5 +1,5 @@
-<div>
-  <div class="fixed top-0 flex px-2 py-2 text-xs text-gray-300 bg-gray-700 shadow-md opacity-75 left-3 rounded-r-md">
+<div class="z-0">
+  <div class="relative top-0 flex px-2 py-2 text-xs text-gray-300 bg-gray-700 shadow-md opacity-75 rounded-r-md">
     {{-- if session 'bookmarkedId' --}}
     @if (session()->has('bookmark'))
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" class="bi bi-bookmark-check-fill"
@@ -8,6 +8,7 @@
           d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
       </svg>&nbsp;
       <span class="mt-1 text-white">{{ $bookmarked->lastname }}, {{ $bookmarked->firstname }}</span>
+      <span class="mt-1 text-white">{{ session()->get('default_warehouse') }}, {{ session()->get('default_warehouse_name') }}</span>
 
       <button wire:click="$emit('removeBookmark')" class="ml-1">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"

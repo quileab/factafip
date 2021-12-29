@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
             'password'=>Hash::make('Sadmin12345'),
         ]);
 
-        \App\Models\Warehouse::truncate();
         \App\Models\Warehouse::create([
             'name'=>'Main',
             'location'=>'This is the main warehouse',
@@ -34,5 +33,22 @@ class DatabaseSeeder extends Seeder
         \App\Models\Category::create([
             'name'=>'General',
         ]);
+        \App\Models\Category::create([
+            'name'=>'Almacen',
+        ]);
+
+        \App\Models\Config::create([
+            'id'=>'default_warehouse',
+            'value'=>'1',
+            'type'=>'int',
+            'description'=>'Default warehouse',
+        ]);
+        \App\Models\Config::create([
+            'id'=>'default_category',
+            'value'=>'1',
+            'type'=>'int',
+            'description'=>'Default category',
+        ]);
+
     }
 }

@@ -1,6 +1,6 @@
 <div wire:init="loadData">
 
-  <x-jet-dialog-modal icon='edit' wire:model="openModal">
+  <x-jet-dialog-modal wire:model="openModal">
     <x-slot name="title">Producto</x-slot>
 
     <x-slot name="content">
@@ -14,7 +14,8 @@
         </div>
         <div class="w-full ml-3">
           <x-jet-label value="Categoría" />
-          <select wire:model.lazy="product_category_id" name="product_category_id" id="product_category_id" class="w-full">
+          <select wire:model.lazy="product_category_id" name="product_category_id" id="product_category_id"
+            class="w-full">
             @foreach ($foreign_categories as $category)
               <option value="{{ $category->id }}">
                 {{ $category->id }}· {{ $category->name }}
@@ -75,7 +76,8 @@
         </div>
         <div class="w-full ml-3">
           <x-jet-label value="Unidad" />
-          <select wire:model.lazy="product_unit_type_id" name="product_unit_type_id" id="product_unit_type_id" class="w-full">
+          <select wire:model.lazy="product_unit_type_id" name="product_unit_type_id" id="product_unit_type_id"
+            class="w-full">
             @foreach ($foreign_units as $unit)
               <option value="{{ $unit->id }}">
                 {{ $unit->id }}· {{ $unit->value }}
@@ -107,26 +109,32 @@
 
       <div class="flex w-full">
         <div class="w-full ml-3">
-          <x-jet-label value="% Ganancia 1" /><div class="flex w-full">
-          <x-jet-input type='number' min="0" step="0.01" wire:model.lazy='product_profit_percentage1'
-            value="{{ $product_profit_percentage1 ?? '' }}" class="w-full" />
-          <x-jet-input-error for="product_profit_percentage1" />
-          <x-jet-button wire:click="calcSalePrice(1)">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
-          </x-jet-button>
+          <x-jet-label value="% Ganancia 1" />
+          <div class="flex w-full">
+            <x-jet-input type='number' min="0" step="0.01" wire:model.lazy='product_profit_percentage1'
+              value="{{ $product_profit_percentage1 ?? '' }}" class="w-full" />
+            <x-jet-input-error for="product_profit_percentage1" />
+            <x-jet-button wire:click="calcSalePrice(1)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+            </x-jet-button>
           </div>
         </div>
         <div class="w-full ml-3">
-          <x-jet-label value="% Ganancia 2" /><div class="flex w-1/2">
-          <x-jet-input type='number' min="0" step="0.01" wire:model.lazy='product_profit_percentage2'
-            value="{{ $product_profit_percentage2 ?? '' }}" class="w-full" />
-          <x-jet-input-error for="product_profit_percentage2" />
-          <x-jet-button wire:click="calcSalePrice(2)">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
+          <x-jet-label value="% Ganancia 2" />
+          <div class="flex w-full">
+            <x-jet-input type='number' min="0" step="0.01" wire:model.lazy='product_profit_percentage2'
+              value="{{ $product_profit_percentage2 ?? '' }}" class="w-full" />
+            <x-jet-input-error for="product_profit_percentage2" />
+            <x-jet-button wire:click="calcSalePrice(2)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
             </x-jet-button>
           </div>
         </div>
@@ -169,9 +177,62 @@
     </x-slot>
   </x-jet-dialog-modal>
 
+  <x-jet-dialog-modal wire:model="inventoryModal">
+    <x-slot name="title">Inventario</x-slot>
+
+    <x-slot name="content">
+
+      <div class="flex">
+        <div class="w-full ml-3">
+          <x-jet-label value="Producto" />
+          <x-jet-input type='text' readonly aria-readonly="true" class="w-full"
+          value="{{ $product_id ?? '' }} {{ $product_model ?? '' }}" />
+        </div>
+        <div class="w-full ml-3">
+          <x-jet-label value="Depósito" />
+          <x-jet-input type='text' readonly aria-readonly="true" class="w-full"
+          value="{{ $warehouse_name ?? '' }}" />
+        </div>
+      </div>
+
+      <div class="flex">
+        <div class="w-full ml-3">
+          <x-jet-label value="Agregar al Stock (Cantidad)" />
+          <x-jet-input type='number' wire:model.lazy='add_qty' value="{{ $add_qty ?? '0' }}"
+            class="w-full" />
+          <x-jet-input-error for="add_qty" />
+        </div>
+        <div class="w-full ml-3">
+          <x-jet-label value="Stock (Cantidad)" />
+          <x-jet-input type='number' readonly aria-readonly="true" wire:model.lazy='inventory_qty' value="{{ $inventory_qty ?? '0' }}"
+            class="w-full" />
+        </div>
+      </div>
+
+    </x-slot>
+
+    <x-slot name="footer">
+      <div class="flex justify-between">
+        <x-jet-secondary-button wire:click="$toggle('inventoryModal')" wire:loading.attr="disabled">
+          Salir
+        </x-jet-secondary-button>
+
+        @if ($updating == true)
+          <x-jet-button wire:click="update" class="px-3 py-1 text-xs font-bold text-white rounded">
+            Modificar
+          </x-jet-button>
+        @else
+          <x-jet-button class="ml-2" wire:click="create" wire:loading.attr="disabled">
+            Guardar
+          </x-jet-button>
+        @endif
+
+      </div>
+    </x-slot>
+  </x-jet-dialog-modal>
 
   <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
-    <div class="m-2 overflow-hidden bg-gray-200 rounded-md shadow-xl">
+    <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
       <div class="flex justify-between px-3 py-2 text-white bg-gray-600">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="currentColor" viewBox="0 0 512 512"
@@ -187,16 +248,17 @@
 
         <x-jet-button wire:click="newProduct">Nuevo</x-jet-button>
       </div>
-      <div class="p-4">
+      <div class="pb-4">
         {{-- show list of products in table --}}
         <table class="table-auto w-full">
           <thead>
-            <tr>
+            <tr class="bg-gray-800 text-white">
               <th class="px-4 py-2">ID</th>
               <th class="px-4 py-2">Categoría</th>
               <th class="px-4 py-2">Marca</th>
               <th class="px-4 py-2">Producto/Modelo</th>
               <th class="px-4 py-2">Descripción</th>
+              <th class="px-4 py-2">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -211,6 +273,8 @@
                   <x-jet-button wire:click="edit({{ $product->id }})" class="mr-2">Editar</x-jet-button>
                   <x-jet-danger-button wire:click="delete({{ $product->id }})" class="mr-2">Eliminar
                   </x-jet-danger-button>
+                  <x-jet-secondary-button wire:click="openInventory({{ $product->id }})" class="mr-2">
+                    Stock</x-jet-secondary-button>
                 </td>
               </tr>
             @endforeach

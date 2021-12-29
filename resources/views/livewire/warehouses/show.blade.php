@@ -72,7 +72,7 @@
   </x-jet-dialog-modal>
 
   <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
-    <div class="m-2 overflow-hidden bg-gray-200 rounded-md shadow-xl">
+    <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
       <div class="flex justify-between px-3 py-2 text-white bg-gray-600">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="currentColor" stroke="currentColor"
@@ -88,11 +88,11 @@
 
         <x-jet-button wire:click="newWarehouse">Nuevo</x-jet-button>
       </div>
-      <div class="p-4">
+      <div class="pb-4">
         {{-- show list of customers in table --}}
         <table class="table-auto w-full">
           <thead>
-            <tr>
+            <tr class="bg-gray-800 text-white">
               <th class="px-4 py-2">ID</th>
               <th class="px-4 py-2">Nombre</th>
               <th class="px-4 py-2">Encargado</th>
@@ -103,16 +103,20 @@
           </thead>
           <tbody>
             @foreach ($warehouses as $warehouse)
-              <tr>
-                <td class="border px-4 py-2">{{ $warehouse->id }}</td>
-                <td class="border px-4 py-2">{{ $warehouse->name }}</td>
-                <td class="border px-4 py-2">{{ $warehouse->contact_person }}</td>
-                <td class="border px-4 py-2">{{ $warehouse->email }}</td>
-                <td class="border px-4 py-2">{{ $warehouse->phone }}</td>
-                <td class="border px-4 py-2">
+              <tr 
+              @class(['bg-indigo-200'=>$warehouse->id==session()->get('default_warehouse')])>
+                <td class="px-4 py-2">{{ $warehouse->id }}</td>
+                <td class="px-4 py-2">{{ $warehouse->name }}</td>
+                <td class="px-4 py-2">{{ $warehouse->contact_person }}</td>
+                <td class="px-4 py-2">{{ $warehouse->email }}</td>
+                <td class="px-4 py-2">{{ $warehouse->phone }}</td>
+                <td class="px-4 py-2">
                   <x-jet-button wire:click="edit({{ $warehouse->id }})" class="mr-2">Editar</x-jet-button>
                   <x-jet-danger-button wire:click="delete({{ $warehouse->id }})" class="mr-2">Eliminar
                   </x-jet-danger-button>
+                  @if($warehouse->id!=session()->get('default_warehouse'))
+                    <x-jet-button wire:click="setDefault({{ $warehouse->id }})" class="mr-2">Defecto</x-jet-button>
+                  @endif
                 </td>
               </tr>
             @endforeach

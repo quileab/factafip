@@ -10,17 +10,21 @@ class Show extends Component
     // Livewire utilities
     public $search = '';
     public $openModal = false;
+    public $inventoryModal = false;
     public $readyToLoad = false;
     public $updating = false;
 
     // Livewire properties
     public $product;
     public $products=[];
+    public $warehouse_id=1;
+    public $warehouse_name='';
+    
     // product foreign data
     public $foreign_categories=[];
     public $foreign_taxes=[];
     public $foreign_units=[];
-    
+
     // product properties
     public $product_id;
     public $product_barcode="";
@@ -39,12 +43,17 @@ class Show extends Component
     public $product_profit_percentage2=0.00;
     public $product_discount_max=0.00;
     
+    // inventory properties
+    public $add_qty=0;
+    public $inventory_qty=0;
+    
     public function mount()
     {
         $this->foreign_categories=\App\Models\Category::all();
         $this->foreign_taxes=\App\Models\TaxConditionType::where('value','>','0')->get();
         $this->foreign_units=\App\Models\UnitType::all();
         $this->products=\App\Models\Product::all();
+        $this->warehouse_id=session('default_warehouse');
     }
 
     public function render()
@@ -227,6 +236,21 @@ class Show extends Component
         }
     }
 
+    public function openInventory(Product $product)
+    {
+        $product=\App\Models\Product::find($product->id);
+        $this->product_id = $product->id;
+        $this->product_model=$product->model;
 
+        $warehouse=\App\Models\Warehouse::find($this->warehouse_id) ?? \App\Models\Warehouse::first();
+        $this->warehouse_id=$warehouse->id;
+        $this->warehouse_name=$warehouse->name;
+
+        $this->inventory_qty=\App\Models\Inventory::
+            where('product_id',$product->id)->
+            where('warehouse_id',$this->warehouse_id)->first()->quantity ?? 0;
+
+            $this->inventoryModal=true;
+    }
    
 }

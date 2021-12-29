@@ -126,7 +126,7 @@
 
 
   <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
-    <div class="m-2 overflow-hidden bg-gray-200 rounded-md shadow-xl">
+    <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
       <div class="flex justify-between px-3 py-2 text-white bg-gray-600">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24"
@@ -142,7 +142,7 @@
 
         <x-jet-button wire:click="newCustomerModalShow">Nuevo</x-jet-button>
       </div>
-      <div class="p-4">
+      <div class="pb-4">
         {{-- show list of customers in table --}}
         <table class="table-auto w-full">
           <thead>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;  
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +20,8 @@ Route::get('/', function () {
 
 // logged only routes
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+   
+    Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
 
     Route::get('/customers/show', App\Http\Livewire\Customers\Show::class)->name('customers');
     Route::get('/warehouses/show', App\Http\Livewire\Warehouses\Show::class)->name('warehouses');

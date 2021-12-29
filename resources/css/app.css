@@ -9,15 +9,10 @@
 .d2c{
   background: #e00b33;
   background: linear-gradient(90deg, #e00b33 15%, #a1049f 100%);
-  text-shadow: 1px 1px 4px black;
-  font-size: large;
-  color: white !important;
 }
 .c2d{
   background: #e00b33;
   background: linear-gradient(0deg, #e00b33 15%, #a1049f 100%);
-  text-shadow: 1px 1px 4px black;
-  color: white !important;
 }
 
 select{

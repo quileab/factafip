@@ -123,4 +123,19 @@ class Show extends Component
         $this->render();
     }
 
+    public function delete(Warehouse $warehouse)
+    {
+        $warehouse->delete();
+        $this->warehouses=\App\Models\Warehouse::all();
+        $this->render();
+    }
+
+    public function setDefault(Warehouse $warehouse)
+    {
+        session(['default_warehouse'=>$warehouse->id]);
+        session(['default_warehouse_name'=>$warehouse->name]);
+        //$this->warehouses=\App\Models\Warehouse::all();
+        $this->render();
+    }
+
 }

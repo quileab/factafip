@@ -1,28 +1,28 @@
 @php
 $nav_links = [
     [
-      'name' => 'Dashboard',
-      'route' => route('dashboard'),
-      'active' => request()->routeIs('dashboard'),
-      'permission'=>'menu.dashboard',
+        'name' => 'Dashboard',
+        'route' => route('dashboard'),
+        'active' => request()->routeIs('dashboard'),
+        'permission' => 'menu.dashboard',
     ],
     [
-      'name' => 'Clientes',
-      'route' => route('customers'),
-      'active' => request()->routeIs('customers'),
-      'permission'=>'menu.customers',
+        'name' => 'Clientes',
+        'route' => route('customers'),
+        'active' => request()->routeIs('customers'),
+        'permission' => 'menu.customers',
     ],
     [
-      'name' => 'Depósitos',
-      'route' => route('warehouses'),
-      'active' => request()->routeIs('warehouses'),
-      'permission'=>'menu.warehouses',
+        'name' => 'Depósitos',
+        'route' => route('warehouses'),
+        'active' => request()->routeIs('warehouses'),
+        'permission' => 'menu.warehouses',
     ],
     [
-      'name' => 'Productos',
-      'route' => route('products'),
-      'active' => request()->routeIs('products'),
-      'permission'=>'menu.products',
+        'name' => 'Productos',
+        'route' => route('products'),
+        'active' => request()->routeIs('products'),
+        'permission' => 'menu.products',
     ],
     // [
     //   'name' => 'Calendarios',
@@ -74,7 +74,11 @@ $nav_links = [
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+  <!-- favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.pn') }}g">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ asset('img/favicon/site.webmanifest') }}">
   <!-- Styles -->
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <style>
@@ -103,7 +107,8 @@ $nav_links = [
       </div>
       <button class="p-4 focus:outline-none focus:bg-gray-700"
         onclick="document.querySelector('.sidbar').classList.toggle('-translate-x-full')">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
@@ -111,7 +116,8 @@ $nav_links = [
     </div>
 
     {{-- sidebar --}}
-    <div class="absolute inset-y-0 left-0 w-56 transition duration-200 ease-in-out transform -translate-x-full bg-gray-600 sidbar text-gray-50 md:relative md:translate-x-0 ">
+    <div
+      class="z-50 absolute inset-y-0 left-0 w-56 transition duration-200 ease-in-out transform -translate-x-full bg-gray-600 sidbar text-gray-50 md:relative md:translate-x-0 ">
       {{-- Logo & profile --}}
       <div class="flex justify-between bg-gray-800">
         {{-- logo --}}
@@ -209,14 +215,14 @@ $nav_links = [
         </div>
       </div>
 
-      <nav class="text-gray-50">
+      <nav class="text-gray-50 overflow-hidden">
         @foreach ($nav_links as $nav_link)
           {{-- @can($nav_link['permission']) --}}
-            <x-jet-nav-link class="block w-full px-4 py-2" href="{{ $nav_link['route'] }}"
-              :active="$nav_link['active']">
-              {{ __($nav_link['name']) }}
-            </x-jet-nav-link>
-            {{-- <br /> --}}
+          <x-jet-nav-link class="block w-full px-4 py-2" href="{{ $nav_link['route'] }}"
+            :active="$nav_link['active']">
+            &nbsp;&nbsp; {{ __($nav_link['name']) }}
+          </x-jet-nav-link>
+          {{-- <br /> --}}
           {{-- @endcan --}}
         @endforeach
       </nav>
@@ -227,10 +233,8 @@ $nav_links = [
     <div class="flex-1 py-0 mx-auto bg-gray-500">
       <!-- Page Content -->
       <main>
-        {{ $slot }}
-        {{-- float information --}}    
         @livewire('assets.bookmark')
-        {{-- <livewire:'assets.bookmark'> --}}
+        {{ $slot }}
       </main>
     </div>
 
@@ -247,13 +251,25 @@ $nav_links = [
     });
 
     livewire.on('toast', function(message, icon) {
-      if (icon == '') { icon = 'success' }
+      if (icon == '') {
+        icon = 'success'
+      }
       switch (icon) {
-        case 'success': bgcolor = '#237539'; break;
-        case 'warning': bgcolor = '#d67200'; break;
-        case 'error':   bgcolor = '#b80000'; break;
-        case 'info':    bgcolor = '#0a3f80'; break;
-        case 'question': bgcolor = '#8a0a61'; break;
+        case 'success':
+          bgcolor = '#237539';
+          break;
+        case 'warning':
+          bgcolor = '#d67200';
+          break;
+        case 'error':
+          bgcolor = '#b80000';
+          break;
+        case 'info':
+          bgcolor = '#0a3f80';
+          break;
+        case 'question':
+          bgcolor = '#8a0a61';
+          break;
       }
       Swal.fire({
         icon: icon,
