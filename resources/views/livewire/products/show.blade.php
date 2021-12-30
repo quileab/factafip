@@ -190,7 +190,6 @@
           <x-jet-label value="Agregar al Stock (Cantidad)" />
           <div class="flex">
           <x-jet-input type='number' wire:model.defer='add_qty' class="w-full" id="add_qty"
-            autofocus
             value="{{ $add_qty ?? '0' }}"
           />
           <x-jet-input-error for="add_qty" />

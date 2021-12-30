@@ -173,4 +173,8 @@ class Show extends Component
         $this->openModal=false;
     }
 
+    public function invoice($customer_id){
+        return redirect()->route('invoices',['customer_id'=>$customer_id]);
+    }
+
 }

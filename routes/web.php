@@ -23,7 +23,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
    
     Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
 
-    Route::get('/customers/show', App\Http\Livewire\Customers\Show::class)->name('customers');
-    Route::get('/warehouses/show', App\Http\Livewire\Warehouses\Show::class)->name('warehouses');
-    Route::get('/products/show', App\Http\Livewire\Products\Show::class)->name('products');
+    Route::get('/customers', App\Http\Livewire\Customers\Show::class)->name('customers');
+    Route::get('/warehouses', App\Http\Livewire\Warehouses\Show::class)->name('warehouses');
+    Route::get('/products', App\Http\Livewire\Products\Show::class)->name('products');
+    Route::get('/invoices/{customer_id?}/{CbteTipo?}/{PtoVta?}', App\Http\Livewire\Invoice\Create::class)->name('invoices');
 });

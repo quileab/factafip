@@ -24,12 +24,12 @@ $nav_links = [
         'active' => request()->routeIs('products'),
         'permission' => 'menu.products',
     ],
-    // [
-    //   'name' => 'Calendarios',
-    //   'route' => route('calendars'),
-    //   'active' => request()->routeIs('calendars'),
-    //   'permission'=>'menu.calendars',
-    // ],
+    [
+      'name' => 'Facturas',
+      'route' => route('invoices'),
+      'active' => request()->routeIs('invoices'),
+      'permission'=>'menu.invoices',
+    ],
     // [
     //   'name' => 'Libros',
     //   'route' => route('books'),
@@ -248,7 +248,9 @@ $nav_links = [
   <script>
     //livewire set focus to control
     window.livewire.on('setfocus', (id) => {
+      window.setTimeout(function () { 
       document.getElementById(id).focus();
+      }, 250);
     });
 
     livewire.on('bookmark', function(message) {

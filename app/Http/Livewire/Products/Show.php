@@ -98,6 +98,7 @@ class Show extends Component
             'product_profit_percentage2',
             'product_discount_max',
         ]);
+        $this->emit('setfocus', 'product_category_id');
         $this->openModal = true;
     }
 
@@ -172,6 +173,7 @@ class Show extends Component
         $this->product_profit_percentage2 = $product->profit_percentage2;
         $this->product_discount_max = $product->discount_max;
         
+        $this->emit('setfocus', 'product_category_id');
         $this->updating = true;
         $this->openModal = true;
         

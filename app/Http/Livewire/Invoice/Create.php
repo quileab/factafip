@@ -7,6 +7,41 @@ use Livewire\Component;
 
 class Create extends Component
 {
+    // Livewire utilities
+    public $search = '';
+    public $openModal = false;
+    public $readyToLoad = false;
+    public $updating = false;
+
+    // Livewire properties
+    public $invoice;
+    public $invoices=[];
+    public $customer_id;
+    public $CbteTipo;
+    public $PtoVta;
+
+    // invoice properties
+    public $invoice_PtoVta=2;
+    public $invoice_number=0;
+    public $invoice_date=0;
+    public $invoice_concepto=0; // 0: Productos, 1: Servicios, 2: Productos y Servicios
+    public $invoice_type_id;
+    public $invoice_customer_id;
+    public $invoice_warehouse_id;
+    public $invoice_currency_id;
+    public $invoice_exchange_rate;
+
+
+    // en mount tomar parametros
+    public function mount()
+    {
+        $this->invoice_customer_id=$this->customer_id;
+        $this->invoice_PtoVta=$this->PtoVta;
+        $this->invoice_type_id=$this->CbteTipo;
+        // resto de los datos
+    }
+
+
     public function render()
     {
         return view('livewire.invoice.create');
