@@ -115,11 +115,7 @@
               value="{{ $product_profit_percentage1 ?? '' }}" class="w-full" />
             <x-jet-input-error for="product_profit_percentage1" />
             <x-jet-button wire:click="calcSalePrice(1)">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
+              <x-svg.calculator />
             </x-jet-button>
           </div>
         </div>
@@ -130,11 +126,7 @@
               value="{{ $product_profit_percentage2 ?? '' }}" class="w-full" />
             <x-jet-input-error for="product_profit_percentage2" />
             <x-jet-button wire:click="calcSalePrice(2)">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
+              <x-svg.calculator />
             </x-jet-button>
           </div>
         </div>
@@ -179,9 +171,7 @@
 
   <x-jet-dialog-modal wire:model="inventoryModal">
     <x-slot name="title">Inventario</x-slot>
-
     <x-slot name="content">
-
       <div class="flex">
         <div class="w-full ml-3">
           <x-jet-label value="Producto" />
@@ -198,9 +188,16 @@
       <div class="flex">
         <div class="w-full ml-3">
           <x-jet-label value="Agregar al Stock (Cantidad)" />
-          <x-jet-input type='number' wire:model.lazy='add_qty' value="{{ $add_qty ?? '0' }}"
-            class="w-full" />
+          <div class="flex">
+          <x-jet-input type='number' wire:model.defer='add_qty' class="w-full" id="add_qty"
+            autofocus
+            value="{{ $add_qty ?? '0' }}"
+          />
           <x-jet-input-error for="add_qty" />
+          <x-jet-button wire:click="calcNewQuantity">
+            <x-svg.leftArrow />
+          </x-jet-button>
+          </div>
         </div>
         <div class="w-full ml-3">
           <x-jet-label value="Stock (Cantidad)" />
@@ -217,15 +214,9 @@
           Salir
         </x-jet-secondary-button>
 
-        @if ($updating == true)
-          <x-jet-button wire:click="update" class="px-3 py-1 text-xs font-bold text-white rounded">
-            Modificar
-          </x-jet-button>
-        @else
-          <x-jet-button class="ml-2" wire:click="create" wire:loading.attr="disabled">
-            Guardar
-          </x-jet-button>
-        @endif
+        <x-jet-button wire:click="saveInventoryQty" class="px-3 py-1 text-xs font-bold text-white rounded">
+          Guardar
+        </x-jet-button>
 
       </div>
     </x-slot>
@@ -269,12 +260,15 @@
                 <td class="border px-4 py-2">{{ $product->brand }}</td>
                 <td class="border px-4 py-2">{{ $product->model }}</td>
                 <td class="border px-4 py-2">{{ $product->description }}</td>
-                <td class="border px-4 py-2">
-                  <x-jet-button wire:click="edit({{ $product->id }})" class="mr-2">Editar</x-jet-button>
-                  <x-jet-danger-button wire:click="delete({{ $product->id }})" class="mr-2">Eliminar
+                <td class="border px-4 py-2 text-right">
+                  <x-jet-button wire:click="edit({{ $product->id }})" class="mr-2">
+                    <x-svg.edit />
+                  </x-jet-button>
+                  <x-jet-danger-button wire:click="delete({{ $product->id }})" class="mr-2">
+                    <x-svg.trash />
                   </x-jet-danger-button>
                   <x-jet-secondary-button wire:click="openInventory({{ $product->id }})" class="mr-2">
-                    Stock</x-jet-secondary-button>
+                    <x-svg.cube />Stock</x-jet-secondary-button>
                 </td>
               </tr>
             @endforeach

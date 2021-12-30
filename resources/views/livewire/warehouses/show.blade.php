@@ -110,12 +110,11 @@
                 <td class="px-4 py-2">{{ $warehouse->contact_person }}</td>
                 <td class="px-4 py-2">{{ $warehouse->email }}</td>
                 <td class="px-4 py-2">{{ $warehouse->phone }}</td>
-                <td class="px-4 py-2">
-                  <x-jet-button wire:click="edit({{ $warehouse->id }})" class="mr-2">Editar</x-jet-button>
-                  <x-jet-danger-button wire:click="delete({{ $warehouse->id }})" class="mr-2">Eliminar
-                  </x-jet-danger-button>
+                <td class="px-4 py-2 text-right">
+                  <x-jet-button wire:click="edit({{ $warehouse->id }})" class="mr-2"><x-svg.edit /></x-jet-button>
+                  <x-jet-danger-button wire:click="delete({{ $warehouse->id }})" class="mr-2"><x-svg.trash /></x-jet-danger-button>
                   @if($warehouse->id!=session()->get('default_warehouse'))
-                    <x-jet-button wire:click="setDefault({{ $warehouse->id }})" class="mr-2">Defecto</x-jet-button>
+                    <x-jet-button wire:click="setDefault({{ $warehouse->id }})" class="mr-2"><x-svg.check /></x-jet-button>
                   @endif
                 </td>
               </tr>

@@ -246,6 +246,11 @@ $nav_links = [
   @stack('scripts')
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script>
+    //livewire set focus to control
+    window.livewire.on('setfocus', (id) => {
+      document.getElementById(id).focus();
+    });
+
     livewire.on('bookmark', function(message) {
       document.getElementById('bookmark').innerHTML = message;
     });

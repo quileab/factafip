@@ -7,6 +7,9 @@ use Livewire\Component;
 
 class Show extends Component
 {
+    // Livewire emit events
+    // protected $listeners=['setfocus']; 
+
     // Livewire utilities
     public $search = '';
     public $openModal = false;
@@ -250,7 +253,42 @@ class Show extends Component
             where('product_id',$product->id)->
             where('warehouse_id',$this->warehouse_id)->first()->quantity ?? 0;
 
-            $this->inventoryModal=true;
+        $this->add_qty = 0;
+        $this->emit('setfocus', 'add_qty');
+        $this->inventoryModal=true;
+    }
+
+    public function calcNewQuantity()
+    {
+        $this->validate([
+            //check if the quantity is a number greater than 0
+            'inventory_qty' => 'required|numeric|min:0',
+        ]);
+        $this->inventory_qty=$this->inventory_qty+$this->add_qty;
+        $this->add_qty=0;
+    }
+
+    public function saveInventoryQty()
+    {
+        $this->validate([
+            //check if the quantity is a number greater than 0
+            'inventory_qty' => 'required|numeric|min:0',
+        ]);
+        $inventory=\App\Models\Inventory::
+            where('product_id',$this->product_id)->
+            where('warehouse_id',$this->warehouse_id)->first();
+        if ($inventory) {
+            $inventory->quantity=$this->inventory_qty;
+            $inventory->save();
+        } else {
+            $inventory=new \App\Models\Inventory([
+                'product_id' => $this->product_id,
+                'warehouse_id' => $this->warehouse_id,
+                'quantity' => $this->inventory_qty,
+            ]);
+            $inventory->save();
+        }
+        $this->inventoryModal=false;
     }
    
 }
