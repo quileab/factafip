@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Config::create([
-            'id'=>'default_warehouse',
+            'id'=>'warehouse_id',
             'value'=>'1',
             'type'=>'int',
             'description'=>'Default warehouse',

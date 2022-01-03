@@ -16,9 +16,16 @@ class Create extends Component
     // Livewire properties
     public $invoice;
     public $invoices=[];
+    public $customer_id_type=96;
+    public $customer=[];
+    public $customers=[];
+    public $warehouse;
+    public $voucher_types=[];
+    public $voucher_type_id;
+    // route parameters
     public $customer_id;
     public $CbteTipo;
-    public $PtoVta;
+    public $PtoVta=2;
 
     // invoice properties
     public $invoice_PtoVta=2;
@@ -36,9 +43,20 @@ class Create extends Component
     public function mount()
     {
         $this->invoice_customer_id=$this->customer_id;
+        $this->voucher_type_id=6;
         $this->invoice_PtoVta=$this->PtoVta;
-        $this->invoice_type_id=$this->CbteTipo;
+        //$this->invoice_type_id=$this->CbteTipo;
         // resto de los datos
+        $this->customer=\App\Models\Customer::find($this->customer_id);
+        if ($this->customer==null) {
+            $this->emit('toast','No se encontró el cliente','error');
+        }
+        $this->warehouse=\App\Models\Warehouse::find(session('warehouse_id'));
+        if ($this->warehouse==null) {
+            $this->emit('toast','No se encontró el Depósito','error');
+        }
+
+        $this->voucher_types=\App\Models\VoucherType::all();
     }
 
 

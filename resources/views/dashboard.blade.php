@@ -14,7 +14,7 @@
                 <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1 md:grid-cols-2">
                     <div class="p-6">
                       <p>Rol: undefined</p>
-                      <p>Depósito : <strong>{{ session()->get('default_warehouse_name') }}</strong></p>
+                      <p>Depósito : <strong>{{ session()->get('warehouse_name') }}</strong></p>
                     </div>
                   </div>
 

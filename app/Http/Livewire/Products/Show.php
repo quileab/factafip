@@ -56,7 +56,7 @@ class Show extends Component
         $this->foreign_taxes=\App\Models\TaxConditionType::where('value','>','0')->get();
         $this->foreign_units=\App\Models\UnitType::all();
         $this->products=\App\Models\Product::all();
-        $this->warehouse_id=session('default_warehouse');
+        $this->warehouse_id=session('warehouse_id');
     }
 
     public function render()

@@ -132,8 +132,8 @@ class Show extends Component
 
     public function setDefault(Warehouse $warehouse)
     {
-        session(['default_warehouse'=>$warehouse->id]);
-        session(['default_warehouse_name'=>$warehouse->name]);
+        session(['warehouse_id'=>$warehouse->id]);
+        session(['warehouse_name'=>$warehouse->name]);
         //$this->warehouses=\App\Models\Warehouse::all();
         $this->render();
     }

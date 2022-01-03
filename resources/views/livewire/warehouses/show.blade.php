@@ -74,15 +74,9 @@
   <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
     <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
       <div class="flex justify-between px-3 py-2 text-white bg-gray-600">
-        <div class="flex">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="currentColor" stroke="currentColor"
-            viewBox="0 0 101 101">
-            <path
-              d="M88.38,32.29l-37-27a1.5,1.5,0,0,0-1.78,0l-36,27a1.5,1.5,0,0,0-.6,1.2v52A1.5,1.5,0,0,0,14.5,87h73A1.5,1.5,0,0,0,89,85.5v-52A1.5,1.5,0,0,0,88.38,32.29ZM75,65H59V50H75ZM56,84H41V68H56Zm3-16H75V84H59ZM75,47H57.5A1.5,1.5,0,0,0,56,48.5V65H39.5A1.5,1.5,0,0,0,38,66.5V84H28V40H75ZM86,84H78V38.5A1.5,1.5,0,0,0,76.5,37h-50A1.5,1.5,0,0,0,25,38.5V84H16V34.25L50.51,8.37,86,34.26Z" />
-          </svg>
-          <div class="ml-4 text-lg">
-            Depósitos
-          </div>
+        <div class="flex ml-2 items-center">
+          <x-svg.warehouse class="h-8 w-8" />
+          <div class="ml-2 text-lg">Depósitos</div>
         </div>
         <x-jet-input wire:model.lazy="search" type="search" class="w-full mx-3" placeholder="Buscar..." />
 
@@ -103,18 +97,25 @@
           </thead>
           <tbody>
             @foreach ($warehouses as $warehouse)
-              <tr 
-              @class(['bg-indigo-200'=>$warehouse->id==session()->get('default_warehouse')])>
+              <tr @class([
+                  'bg-indigo-200' => $warehouse->id == session()->get('warehouse_id'),
+              ])>
                 <td class="px-4 py-2">{{ $warehouse->id }}</td>
                 <td class="px-4 py-2">{{ $warehouse->name }}</td>
                 <td class="px-4 py-2">{{ $warehouse->contact_person }}</td>
                 <td class="px-4 py-2">{{ $warehouse->email }}</td>
                 <td class="px-4 py-2">{{ $warehouse->phone }}</td>
                 <td class="px-4 py-2 text-right">
-                  <x-jet-button wire:click="edit({{ $warehouse->id }})" class="mr-2"><x-svg.edit /></x-jet-button>
-                  <x-jet-danger-button wire:click="delete({{ $warehouse->id }})" class="mr-2"><x-svg.trash /></x-jet-danger-button>
-                  @if($warehouse->id!=session()->get('default_warehouse'))
-                    <x-jet-button wire:click="setDefault({{ $warehouse->id }})" class="mr-2"><x-svg.check /></x-jet-button>
+                  <x-jet-button wire:click="edit({{ $warehouse->id }})" class="mr-2">
+                    <x-svg.edit />
+                  </x-jet-button>
+                  <x-jet-danger-button wire:click="delete({{ $warehouse->id }})" class="mr-2">
+                    <x-svg.trash />
+                  </x-jet-danger-button>
+                  @if ($warehouse->id != session()->get('warehouse_id'))
+                    <x-jet-button wire:click="setDefault({{ $warehouse->id }})" class="mr-2">
+                      <x-svg.check />
+                    </x-jet-button>
                   @endif
                 </td>
               </tr>
