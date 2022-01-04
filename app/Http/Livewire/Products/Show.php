@@ -73,6 +73,7 @@ class Show extends Component
     { 
         $this->search = $search;
         $this->products=\App\Models\Product::where('description','like','%'.$this->search.'%')
+            ->orWhere('model','like','%'.$this->search.'%')
             ->orWhere('brand','like','%'.$this->search.'%')
             ->orWhere('barcode','like','%'.$this->search.'%')
             ->get();

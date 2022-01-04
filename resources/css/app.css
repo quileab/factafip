@@ -11,10 +11,14 @@
   background: linear-gradient(90deg, #e00b33 15%, #a1049f 100%);
 }
 .c2d{
-  background: #e00b33;
-  background: linear-gradient(0deg, #e00b33 15%, #a1049f 100%);
+  background: #550614;
+  background: linear-gradient(0deg, #550614 15%, #30022f 100%);
 }
 
 select{
-  @apply my-1 px-2 py-2 border-gray-500 rounded-md shadow-sm bg-gray-50 text-gray-900
+  @apply my-1 px-2 py-2 border-2 border-gray-500 rounded-md shadow-sm bg-gray-50 text-gray-900 focus:border-fuchsia-500 focus:outline-none focus:bg-white;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.1);
 }
