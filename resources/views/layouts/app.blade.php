@@ -76,7 +76,7 @@ $nav_links = [
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.pn') }}g">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
   <link rel="manifest" href="{{ asset('img/favicon/site.webmanifest') }}">
   <!-- Styles -->
@@ -246,6 +246,13 @@ $nav_links = [
   @stack('scripts')
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script>
+    //on input get focus select all text vanilla js
+    document.querySelectorAll('input').forEach(function (input) {
+      input.addEventListener('focus', function () {
+        this.select();
+      });
+    });
+
     //livewire set focus to control
     window.livewire.on('setfocus', (id) => {
       window.setTimeout(function () { 
@@ -262,21 +269,11 @@ $nav_links = [
         icon = 'success'
       }
       switch (icon) {
-        case 'success':
-          bgcolor = '#237539';
-          break;
-        case 'warning':
-          bgcolor = '#d67200';
-          break;
-        case 'error':
-          bgcolor = '#b80000';
-          break;
-        case 'info':
-          bgcolor = '#0a3f80';
-          break;
-        case 'question':
-          bgcolor = '#8a0a61';
-          break;
+        case 'success': bgcolor = '#237539'; break;
+        case 'warning': bgcolor = '#d67200'; break;
+        case 'error':   bgcolor = '#b80000'; break;
+        case 'info':    bgcolor = '#0a3f80'; break;
+        case 'question':bgcolor = '#8a0a61'; break;
       }
       Swal.fire({
         icon: icon,

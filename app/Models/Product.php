@@ -26,4 +26,15 @@ class Product extends Model
         'profit_percentage2',
         'discount_max',
     ];
+
+    // relation with tax with tax_condition_type value
+    public function tax()
+    {
+        return $this->hasOne(TaxConditionType::class, 'id', 'tax_condition_type_id');
+    }
+    // relation with unit type with
+    public function unit()
+    {
+        return $this->hasOne(UnitType::class, 'id', 'unit_type_id');
+    }
 }

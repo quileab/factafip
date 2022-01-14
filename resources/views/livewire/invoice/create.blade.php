@@ -21,7 +21,10 @@
         <thead class="bg-gray-800 text-gray-100">
           <tr>
             <th>Productos</th>
+            @if (($products!=[]) && ($products->count() ==1))
             <th>Precios</th>
+            <th>Descuento</th>
+            @endif
           </tr>
         </thead>
         <tbody>
@@ -29,17 +32,27 @@
             <tr>
               <td>
                 <p class="w-full truncate">
+                  <button wire:click="selectProduct({{$product->id}})">
                   {{ $product->brand }}: {{ $product->model }}: {{ $product->description }}
+                  </button>
                 </p>
               </td>
-              <td class="text-right">
-                <x-jet-button wire:click="addToCart({{ $product->id }},1)">
-                  {{ number_format($product->sale_price1, 2, ',', '.') }}
-                </x-jet-button>
-                <x-jet-button wire:click="addToCart({{ $product->id }},2)">
-                  {{ number_format($product->sale_price2, 2, ',', '.') }}
-                </x-jet-button>
+              @if (($products!=[]) && ($products->count() ==1))
+              <td>
+                <select wire:model="priceColumn" id="priceDropdown" class="w-full">
+                    <option value="1">{{currency_format($product->sale_price1)}}</option>
+                    <option value="2">{{currency_format($product->sale_price2)}}</option>
+                </select>
+
               </td>
+              <td>
+                <x-jet-input type="number" min="0" max="{{$product->discount_max}}"
+                  wire:model.lazy="discount" />
+                  <x-jet-button wire:click="addToCart({{$product->id}},{{$priceColumn}})" class="ml-2">
+                    <x-svg.cartPlus class="w-5 h-5" />
+                  </x-jet-button>
+              </td>
+              @endif
             </tr>
           @endforeach
         </tbody>
@@ -125,10 +138,7 @@
           </div>
         </div>
         <div class="w-1/4 text-lg text-right">
-          TOTAL: {{ $total }}
-          <x-jet-button wire:click="invoiceCreate" class="w-full">
-            <x-svg.fileInvoice /> Facturar
-          </x-jet-button>
+          <small>TOTAL: $</small> <strong>{{ $total_integer }}</strong>,<sup>{{ $total_decimal }}</sup><br />
         </div>
       </div>
 
@@ -139,6 +149,7 @@
             <th class="px-4 py-2">Descripción</th>
             <th class="px-4 py-2">Cantidad</th>
             <th class="px-4 py-2">Precio Unitario</th>
+            <th class="px-4 py-2">Desc.%</th>
             <th class="px-4 py-2">Subtotal</th>
             <th class="px-4 py-2">
               <x-jet-secondary-button wire:click="searchProductsModal">
@@ -148,12 +159,13 @@
           </tr>
         </thead>
         <tbody>
-          @foreach ($cart as $item)
+          @foreach ($cart as $key=>$item)
             <tr>
               <td class="px-4 py-2">{{ $item->id }}</td>
               <td class="px-4 py-2">{{ $item->name }}</td>
               <td class="px-4 py-2 text-right">{{ $item->qty }}</td>
               <td class="px-4 py-2 text-right">{{ number_format($item->price, 2, ',', '.') }}</td>
+              <td class="px-4 py-2 text-center">{{ $item->discountRate }}</td>
               <td class="px-4 py-2 text-right">{{ number_format($item->qty * $item->price, 2, ',', '.') }}</td>
               <td class="px-4 py-2">
               <x-jet-danger-button wire:click="removeItem('{{ $item->rowId }}')">
@@ -168,5 +180,21 @@
 
     </div>
   </div>
+
+  <x-jet-button color="green" wire:click="debugCart">
+    debugCart
+  </x-jet-button>
+  <a href="{{ route('pdf.invoice') }}" target="_blank" class="text-gray-500">
+    <x-jet-button color="red">
+      PDF
+    </x-jet-button>
+  </a>
+  @if($total > 0)
+  <x-jet-button wire:click="invoiceCreate" class="w-full">
+    <x-svg.fileInvoice /> Facturar
+  </x-jet-button>
+  @endif
+
+
 
 </div>

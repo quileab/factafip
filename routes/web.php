@@ -1,18 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;  
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\pdfController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,6 +12,9 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
    
     Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
+    Route::get('/pdf/invoice', [pdfController::class,'invoice'])->name('pdf.invoice');
+    Route::get('/pdf/qrcode', [pdfController::class,'qrcode'])->name('pdf.qrcode');
+    Route::get('/pdf/htmlinvoice', [pdfController::class,'htmlinvoice'])->name('pdf.htmlinvoice');
 
     Route::get('/customers', App\Http\Livewire\Customers\Show::class)->name('customers');
     Route::get('/warehouses', App\Http\Livewire\Warehouses\Show::class)->name('warehouses');
