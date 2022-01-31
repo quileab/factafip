@@ -166,11 +166,14 @@
               <td class="px-4 py-2 text-right">{{ $item->qty }}</td>
               <td class="px-4 py-2 text-right">{{ number_format($item->price, 2, ',', '.') }}</td>
               <td class="px-4 py-2 text-center">{{ $item->discountRate }}</td>
-              <td class="px-4 py-2 text-right">{{ number_format($item->qty * $item->price, 2, ',', '.') }}</td>
+              <td class="px-4 py-2 text-right">{{ number_format($item->qty * ($item->price-($item->price*$item->discountRate/100)), 2, ',', '.') }}</td>
               <td class="px-4 py-2">
               <x-jet-danger-button wire:click="removeItem('{{ $item->rowId }}')">
                 <x-svg.trash />
               </x-jet-danger-button>
+              <x-jet-button wire:click="removeOneItem('{{ $item->rowId }}')">
+                <x-svg.cartDash />
+              </x-jet-button>
               </td>
             </tr>
           @endforeach
@@ -181,10 +184,10 @@
     </div>
   </div>
 
-  <x-jet-button color="green" wire:click="debugCart">
-    debugCart
+  <x-jet-button color="green" wire:click="$set('debugging', {{!$debugging}})" >
+    debugCart {{$debugging}}
   </x-jet-button>
-  <a href="{{ route('pdf.invoice') }}" target="_blank" class="text-gray-500">
+  <a href="" target="_blank" class="text-gray-500">
     <x-jet-button color="red">
       PDF
     </x-jet-button>
@@ -194,7 +197,6 @@
     <x-svg.fileInvoice /> Facturar
   </x-jet-button>
   @endif
-
 
 
 </div>

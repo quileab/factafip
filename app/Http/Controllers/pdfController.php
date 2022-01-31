@@ -37,6 +37,7 @@ class pdfController extends Controller
         // otros datos
         $customer=\App\Models\Customer::find($data['DocNro']);
         $data['customer']=$customer;
+        //dd($customer,$data);
         $data['customer']->responsibility_type_id=\App\Models\ResponsibilityType::find($data['customer']->responsibility_type_id)->value;
 
         $conf=\App\Models\Config::pluck('value','id')->toArray('id','value');

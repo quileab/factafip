@@ -97,9 +97,7 @@
           </thead>
           <tbody>
             @foreach ($warehouses as $warehouse)
-              <tr @class([
-                  'bg-indigo-200' => $warehouse->id == session()->get('warehouse_id'),
-              ])>
+              <tr>
                 <td class="px-4 py-2">{{ $warehouse->id }}</td>
                 <td class="px-4 py-2">{{ $warehouse->name }}</td>
                 <td class="px-4 py-2">{{ $warehouse->contact_person }}</td>
@@ -116,6 +114,10 @@
                     <x-jet-button wire:click="setDefault({{ $warehouse->id }})" class="mr-2">
                       <x-svg.check />
                     </x-jet-button>
+                  @else
+                    <x-jet-secondary-button class="mr-2" disabled>
+                      <x-svg.warehouse />
+                    </x-jet-secondary-button>
                   @endif
                 </td>
               </tr>

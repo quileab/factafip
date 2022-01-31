@@ -45,7 +45,7 @@
     /* page body */
     body {
       font-family: 'Open Sans', sans-serif;
-      padding-top: 3.1cm;
+      padding-top: 3cm;
       padding-bottom: 3.1cm;
       counter-reset: pages 1;
     }
@@ -65,12 +65,12 @@
     }
 
     table thead th {
-      padding: 5px;
+      padding: 1mm;
       text-align: center;
     }
 
     table tbody td {
-      padding: 5px;
+      padding: 1mm;
       text-align: center;
     }
 
@@ -93,7 +93,7 @@
     }
 
     table tfoot td {
-      padding: 5px;
+      padding: 1mm;
       text-align: center;
     }
 
@@ -211,7 +211,7 @@
 </head>
 
 <body>
-  @foreach ([1 => 'ORIGINAL', 2 => 'DUPLICADO', 3 => 'TRIPLICADO'] as $key => $copies)
+  @foreach ([1 => 'ORIGINAL', 2 => 'DUPLICADO'] as $key => $copies)
     <header>
       <div>
         <table>
@@ -283,15 +283,17 @@
       <table class="font-xsm">
         <thead style="background-color: #dddddd;">
           <tr>
-            <th style="width:20%;" class="border-top border-left">Cód.</th>
+            <th style="width:5%; overflow:hidden;" class="border-top border-left">Cód.</th>
             <th style="width:60%;" class="border-top border-left">Descripción</th>
-            <th style="width:10%;" class="border-top border-left">Cantidad</th>
+            <th style="width:10%;" class="border-top border-left">Cant.</th>
             <th style="width:10%;" class="border-top border-left">U. med.</th>
             <th style="width:15%;" class="border-top border-left">Precio Unitario</th>
-            <th style="width:15%;" class="border-top border-left">% Desc.</th>
+            <th style="width:10%;" class="border-top border-left">% Desc.</th>
+           @if ($data['inv_letter'] == 'A')
+              <th style="width:15%;" class="border-top border-left">Subt.</th>
+              <th style="width:15%;" class="border-top border-left">IVA</th>
+           @endif 
             <th style="width:15%;" class="border-top border-left">Subtotal</th>
-            <th style="width:15%;" class="border-top border-left">IVA</th>
-            <th style="width:15%;" class="border-top border-left">Subtotal c/IVA</th>
           </tr>
         </thead>
         <tbody>
@@ -302,16 +304,24 @@
               <td class="border-left">{{ $item->qty }}</td>
               <td class="border-left">{{ $item->model->unit->value }}</td>
               <td class="text-right border-left">{{ currency_format($item->price) }}</td>
-              <td class="text-right border-left">{{ $item->discountRate }}</td>
-              <td class="text-right border-left">0</td>
-              <td class="text-right border-left">{{ $item->taxRate }}</td>
-              <td class="text-right border-left border-right">{{ currency_format($item->price) }}</td>
+              <td class="text-right border-left">{{ $item->discountRate }}%</td>
+              @if ($data['inv_letter'] == 'A')
+                <td class="text-right border-left">
+                  {{ number_format($data['itemDetail'][$item->rowId]['BaseImp'], 2, ',', '.') }}
+                </td>
+                <td class="text-right border-left">
+                  <small>{{ $item->taxRate }}%</small> {{ number_format($data['itemDetail'][$item->rowId]['IVA'], 2, ',', '.') }}
+                </td>
+              @endif
+              <td class="text-right border-left border-right">
+                {{ number_format($item->qty * ($item->price-($item->price*$item->discountRate/100)), 2, ',', '.') }}
+              </td>
             </tr>
           @endforeach
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="7" class="border-top border-left text-right">
+            <td colspan="{{ $data['inv_letter'] === 'A' ? 7:5 }}" class="border-top border-left text-right">
               Subtotal
             </td>
             <td colspan="2" class="border-top border-right text-right">
@@ -320,12 +330,12 @@
           </tr>
           @foreach ($data['Iva'] as $iva)
             <tr>
-              <td colspan="7" class="text-right">IVA {{ $iva['Id'] }}</td>
+              <td colspan="{{ $data['inv_letter'] === 'A' ? 7:5 }}" class="text-right">IVA {{ $iva['Id'] }}</td>
               <td colspan="2" class="text-right">{{ currency_format($iva['Importe']) }}</td>
             </tr>
           @endforeach
           <tr>
-            <td colspan="7" class="border-left border-right text-right">
+            <td colspan="{{ $data['inv_letter'] === 'A' ? 7:5 }}" class="border-left border-right text-right">
               <strong>Total</strong>
             </td>
             <td colspan="2" class="border-top border-left border-right text-right">

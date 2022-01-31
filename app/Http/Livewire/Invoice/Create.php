@@ -16,6 +16,7 @@ class Create extends Component
     public $ProdSearch = '';
     public $openModal = false;
     public $readyToLoad = false;
+    public $debugging = false;
     
     // Livewire properties
     public $defaultPriceCol=1;
@@ -30,7 +31,7 @@ class Create extends Component
     public $products=[];
     public $quantity=1;
     public $price;
-    public $discount;
+    public $discount=0;
     public $subtotal;
     public $total;
     // route parameters
@@ -72,7 +73,7 @@ class Create extends Component
     public function render()
     {
         $cart=Cart::content();
-        $this->total=number_format(Cart::priceTotal(),2,'.','');
+        $this->total=number_format(Cart::subtotal(),2,'.','');
         // format total
             $split=explode('.',$this->total);
             $total_integer=number_format($split[0],0,'','.');
@@ -113,8 +114,13 @@ class Create extends Component
     }
 
     public function searchProductsModal(){
-        $this->reset('products');
+        $this->reset('products','ProdSearch','discount');
         $this->emit('setfocus','ProdSearch');
+
+        $this->quantity=1;
+        $this->barcode='';
+        $this->search='';
+
         $this->openModal = true;
     }
 
@@ -127,7 +133,6 @@ class Create extends Component
     public function addToCart($product,$priceColumn)
     {
         $product=\App\Models\Product::find($product);
-        //dd($product, $priceColumn);
         // I´ve used if instead switch because there´s only 2 options
         if ($priceColumn==2) {
             $price=$product->sale_price2;
@@ -135,18 +140,14 @@ class Create extends Component
             $price=$product->sale_price1;
         }
 
-
         $cartItem=Cart::add(
             $product->id,
             $product->brand.': '.$product->model.': '.$product->description,
             $this->quantity,
             $price,0)->associate('App\Models\Product');
         Cart::setTax($cartItem->rowId,floatval($product->tax->value));
-        Cart::setDiscount($cartItem->rowId,$this->discount);
+        Cart::setDiscount($cartItem->rowId,floatval($this->discount));
        
-        $this->quantity=1;
-        $this->barcode='';
-        $this->search='';
         $this->openModal=false;
     }
 
@@ -155,13 +156,13 @@ class Create extends Component
         Cart::remove($rowId);
     }
 
-    public function debugCart()
+    public function removeOneItem($rowId)
     {
-        // route to controller view inside pdfController
-        //redirect(route('pdf.invoice'));
-        $cart=Cart::content();
-        dd($cart);
-     }
+        $cart=Cart::get($rowId);
+        if ($cart->qty>1) {
+            Cart::update($rowId,$cart->qty-1);
+        }
+    }
 
     public function invoiceCreate(){
         $fiscal=false;
@@ -171,16 +172,13 @@ class Create extends Component
         // create the taxes array and initialize it
         foreach (Cart::content() as $item) {
             $item->tax_id=$item->model->tax_condition_type_id;
-            $taxes[$item->tax_id]=[
-                'Id'=>0,
-                'BaseImp'=>0,
-                'Importe'=>0,
-            ];
+            $taxes[$item->tax_id]=['Id'=>0,'BaseImp'=>0,'Importe'=>0,];
         }
-        // add the taxes to the array
+        // Make calculations & add the taxes to the array
         foreach (Cart::content() as $item) {
             $tax_id=$item->model->tax_condition_type_id;
-            $Subtotal=round($item->price*$item->qty,$decimals);
+            $Discount=round($item->price*($item->discountRate/100),$decimals); 
+            $Subtotal=round(($item->price-$Discount)*$item->qty,$decimals);
             $Neto=round($Subtotal/(1+$item->taxRate/100),$decimals);
             $BaseImp=round($taxes[$item->tax_id]['BaseImp']+$Neto,$decimals);
             $Importe=round($taxes[$item->tax_id]['Importe']+($Subtotal-$Neto),$decimals);
@@ -189,6 +187,14 @@ class Create extends Component
                 'Id'=>$tax_id,
                 'BaseImp'=>$BaseImp,
                 'Importe'=>$Importe,
+            ];
+
+            $itemDetail[$item->rowId]=[
+                'Precio'=>$item->price*$item->qty,
+                'SubTotal'=>$Subtotal,
+                'Descuento'=>$Discount,
+                'BaseImp'=>$BaseImp,
+                'IVA'=>$Importe,
             ];
         }
         
@@ -253,11 +259,11 @@ class Create extends Component
         );
 
         if($fiscal){
-        try{
-            $res = $afip->ElectronicBilling->CreateVoucher($data);
-        } catch (\Exception $e) {
-            $res = $e->getMessage();
-        }
+            try{
+                $res = $afip->ElectronicBilling->CreateVoucher($data);
+            } catch (\Exception $e) {
+                $res = $e->getMessage();
+            }
         } else {
             $res = [
                 'CAE' => '72027983789500',
@@ -267,7 +273,12 @@ class Create extends Component
         $res['CUIT']=$cuit;
         $data['res']=$res;
         $data['items']=Cart::content();
+        $data['itemDetail']=$itemDetail;
         session()->put('invoiceData',$data);
+
+        if ($this->debugging) {
+            dd($data, strlen(serialize($data)));
+        }
         
         //$res['CAE']; //CAE asignado el comprobante
         //$res['CAEFchVto']; //Fecha de vencimiento del CAE (yyyy-mm-dd)
