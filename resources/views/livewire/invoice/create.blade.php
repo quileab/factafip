@@ -3,18 +3,15 @@
     <x-slot name="title">AFIP ERROR</x-slot>
 
     <x-slot name="content">
-      <div class="text-md text-red-800">
-        {{ $afipError }}
-      </div>
+      <div class="text-md text-red-800">{{ $afipError }}</div>
     </x-slot>
 
     <x-slot name="footer">
-        <x-jet-secondary-button wire:click="$toggle('afipModal')" wire:loading.attr="disabled">
-          Salir
-        </x-jet-secondary-button>
+      <x-jet-secondary-button wire:click="$toggle('afipModal')" wire:loading.attr="disabled">
+        Salir
+      </x-jet-secondary-button>
     </x-slot>
   </x-jet-dialog-modal>
-
 
   <x-jet-dialog-modal icon='edit' wire:model="openModal">
     <x-slot name="title">
@@ -85,7 +82,6 @@
       </div>
     </x-slot>
   </x-jet-dialog-modal>
-
 
   <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
     <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
