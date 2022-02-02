@@ -1,4 +1,20 @@
 <div>
+  <x-jet-dialog-modal icon='edit' wire:model="afipModal">
+    <x-slot name="title">AFIP ERROR</x-slot>
+
+    <x-slot name="content">
+      <div class="text-md text-red-800">
+        {{ $afipError }}
+      </div>
+    </x-slot>
+
+    <x-slot name="footer">
+        <x-jet-secondary-button wire:click="$toggle('afipModal')" wire:loading.attr="disabled">
+          Salir
+        </x-jet-secondary-button>
+    </x-slot>
+  </x-jet-dialog-modal>
+
 
   <x-jet-dialog-modal icon='edit' wire:model="openModal">
     <x-slot name="title">
@@ -115,27 +131,20 @@
         </div>
       </div>
 
-      <div class="flex px-4 py-2 items-center bg-gray-300">
-        <div class="w-3/4 flex">
-          <div>
-            <x-svg.barcodeScan class="h-8 w-8 mr-2" />
-          </div>
-          <div class="mx-1">
-            <label for="barcode" class="block text-sm">Cod. Barras</label>
-            <x-jet-input wire:model.lazy="search" wire:keydown.enter='inputBarcode()' class="w-max"
-              type="text" />
-          </div>
-          <div class="mx-1">
-            <label for="scanqty" class="block text-sm">Cantidad</label>
-            <x-jet-input wire:model="quantity" class="w-max" type="number" min="1" max="9999" />
-          </div>
-          <div class="mx-1 w-28">
-            <label for="Col. Precio" class="block text-sm">Col. Precio</label>
-            <select wire:model="defaultPriceCol" class="w-full">
+      <div class="flex px-4 py-1 bg-gray-300">
+        <div class="w-3/4 flex align-middle">
+          <span><x-svg.barcodeScan class="mr-1 mt-4" /></span>
+          <x-jet-input wire:model.lazy="search" wire:keydown.enter='inputBarcode()' class="w-max mr-1"
+            type="text" />
+
+          <span><x-svg.collection class="mr-1 mt-4" /></span>
+            <x-jet-input wire:model="quantity" class="mr-1" type="number" min="1" max="9999" />
+
+            <select wire:model="defaultPriceCol" class="mx-1 appearance-none pr-8">
               <option value="1">Precio 1</option>
               <option value="2">Precio 2</option>
             </select>
-          </div>
+
         </div>
         <div class="w-1/4 text-lg text-right">
           <small>TOTAL: $</small> <strong>{{ $total_integer }}</strong>,<sup>{{ $total_decimal }}</sup><br />

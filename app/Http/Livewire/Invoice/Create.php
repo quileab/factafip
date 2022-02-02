@@ -15,6 +15,8 @@ class Create extends Component
     public $search = '';
     public $ProdSearch = '';
     public $openModal = false;
+    public $afipModal = false;
+    public $afipError = '';
     public $readyToLoad = false;
     public $debugging = false;
     
@@ -32,7 +34,7 @@ class Create extends Component
     public $quantity=1;
     public $price;
     public $discount=0;
-    public $subtotal;
+    //public $subtotal;
     public $total;
     // route parameters
     public $customer_id;
@@ -165,10 +167,10 @@ class Create extends Component
     }
 
     public function invoiceCreate(){
-        $fiscal=false;
+        $fiscal=true;
 
         $decimals = config('cart.format.decimals', 2);
-        $cuit = (int)\App\Models\Config::find('cuit')->value;
+        $cuit = (int) preg_replace('/[^0-9]/', '', \App\Models\Config::find('cuit')->value); 
         // create the taxes array and initialize it
         foreach (Cart::content() as $item) {
             $item->tax_id=$item->model->tax_condition_type_id;
@@ -220,11 +222,11 @@ class Create extends Component
             'key' => 'Private.key',
             'environment' => 'homologation',
         ]);
+        
         $last_voucher = $afip->ElectronicBilling->GetLastVoucher($this->PtoVta,$this->CbteTipo)+1;
         } else {
             $last_voucher = rand(1,999999);
         }
-
 
         if ($this->CbteTipo==1) {
             $DocNro=$this->customer->CUIT;
@@ -270,6 +272,14 @@ class Create extends Component
                 'CAEFchVto' => '2022-01-21',
             ];
         }
+
+        // si no existe $res['cae'] entonces no se pudo crear el comprobante fiscal
+        if(!isset($res['CAE'])){
+            $this->afipError=utf8_decode($res);
+            $this->afipModal=true;
+            return;
+        }
+        
         $res['CUIT']=$cuit;
         $data['res']=$res;
         $data['items']=Cart::content();

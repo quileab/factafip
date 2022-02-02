@@ -1048,6 +1048,9 @@ select {
 .-mt-px {
   margin-top: -1px;
 }
+.mr-1 {
+  margin-right: 0.25rem;
+}
 .block {
   display: block;
 }
@@ -1098,6 +1101,9 @@ select {
 }
 .h-20 {
   height: 5rem;
+}
+.h-7 {
+  height: 1.75rem;
 }
 .min-h-screen {
   min-height: 100vh;
@@ -1155,8 +1161,8 @@ select {
   width: -moz-max-content;
   width: max-content;
 }
-.w-28 {
-  width: 7rem;
+.w-7 {
+  width: 1.75rem;
 }
 .min-w-0 {
   min-width: 0px;
@@ -1233,6 +1239,11 @@ select {
 }
 .list-disc {
   list-style-type: disc;
+}
+.appearance-none {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
 }
 .grid-cols-6 {
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -1430,10 +1441,6 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
 }
-.bg-green-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(187 247 208 / var(--tw-bg-opacity));
-}
 .bg-gray-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(156 163 175 / var(--tw-bg-opacity));
@@ -1446,13 +1453,9 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
-.bg-green-100 {
+.bg-red-400 {
   --tw-bg-opacity: 1;
-  background-color: rgb(220 252 231 / var(--tw-bg-opacity));
-}
-.bg-green-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(240 253 244 / var(--tw-bg-opacity));
+  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
 }
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
@@ -1575,6 +1578,12 @@ select {
 .pt-8 {
   padding-top: 2rem;
 }
+.pr-6 {
+  padding-right: 1.5rem;
+}
+.pr-8 {
+  padding-right: 2rem;
+}
 .text-left {
   text-align: left;
 }
@@ -1583,6 +1592,9 @@ select {
 }
 .text-right {
   text-align: right;
+}
+.align-middle {
+  vertical-align: middle;
 }
 .font-sans {
   font-family: Nunito, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -1725,6 +1737,10 @@ select {
 .text-gray-300 {
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
+}
+.text-red-800 {
+  --tw-text-opacity: 1;
+  color: rgb(153 27 27 / var(--tw-text-opacity));
 }
 .underline {
   -webkit-text-decoration-line: underline;

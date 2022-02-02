@@ -342,12 +342,11 @@
               <strong>{{ currency_format($data['ImpTotal']) }}</strong>
             </td>
 
-
         </tfoot>
       </table>
 
     </main>
-    @if ($key < 3)
+    @if ($key < 2)
       <div class="page-break"></div>
     @endif
   @endforeach
