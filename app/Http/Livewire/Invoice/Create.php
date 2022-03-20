@@ -47,14 +47,12 @@ class Create extends Component
     public $invoice_date=0;
     public $invoice_concepto=0; // 0: Productos, 1: Servicios, 2: Productos y Servicios
     public $invoice_type_id;
-    public $invoice_customer_id;
     public $invoice_warehouse_id;
-    public $invoice_currency_id;
+    //public $invoice_currency_id;
 
     // en mount tomar parametros
     public function mount()
     {
-        $this->invoice_customer_id=$this->customer_id;
         $this->voucher_type_id=6;
         $this->invoice_PtoVta=$this->PtoVta;
         //$this->invoice_type_id=$this->CbteTipo;
@@ -77,9 +75,9 @@ class Create extends Component
         $cart=Cart::content();
         $this->total=number_format(Cart::subtotal(),2,'.','');
         // format total
-            $split=explode('.',$this->total);
-            $total_integer=number_format($split[0],0,'','.');
-            $total_decimal=$split[1];
+          $split=explode('.',$this->total);
+          $total_integer=number_format($split[0],0,'','.');
+          $total_decimal=$split[1];
         return view('livewire.invoice.create',compact('cart','total_integer','total_decimal'));
     }
 
@@ -170,7 +168,7 @@ class Create extends Component
         $fiscal=true;
 
         $decimals = config('cart.format.decimals', 2);
-        $cuit = (int) preg_replace('/[^0-9]/', '', \App\Models\Config::find('cuit')->value); 
+        $cuit = (int) preg_replace('/[^0-9]/', '', \App\Models\Config::find('cuit')->value);
         // create the taxes array and initialize it
         foreach (Cart::content() as $item) {
             $item->tax_id=$item->model->tax_condition_type_id;
@@ -179,7 +177,7 @@ class Create extends Component
         // Make calculations & add the taxes to the array
         foreach (Cart::content() as $item) {
             $tax_id=$item->model->tax_condition_type_id;
-            $Discount=round($item->price*($item->discountRate/100),$decimals); 
+            $Discount=round($item->price,$decimals)*round($item->discountRate/100,$decimals); 
             $Subtotal=round(($item->price-$Discount)*$item->qty,$decimals);
             $Neto=round($Subtotal/(1+$item->taxRate/100),$decimals);
             $BaseImp=round($taxes[$item->tax_id]['BaseImp']+$Neto,$decimals);
@@ -192,7 +190,7 @@ class Create extends Component
             ];
 
             $itemDetail[$item->rowId]=[
-                'Precio'=>$item->price*$item->qty,
+                'Precio'=>round($item->price,$decimals)*round($item->qty,$decimals),
                 'SubTotal'=>$Subtotal,
                 'Descuento'=>$Discount,
                 'BaseImp'=>$BaseImp,
@@ -221,9 +219,9 @@ class Create extends Component
             'cert' => 'DN1.crt',
             'key' => 'Private.key',
             'environment' => 'homologation',
-        ]);
+            ]);
         
-        $last_voucher = $afip->ElectronicBilling->GetLastVoucher($this->PtoVta,$this->CbteTipo)+1;
+            $last_voucher = $afip->ElectronicBilling->GetLastVoucher($this->PtoVta,$this->CbteTipo)+1;
         } else {
             $last_voucher = rand(1,999999);
         }

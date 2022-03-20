@@ -1102,9 +1102,6 @@ select {
 .h-20 {
   height: 5rem;
 }
-.h-7 {
-  height: 1.75rem;
-}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -1160,9 +1157,6 @@ select {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
-}
-.w-7 {
-  width: 1.75rem;
 }
 .min-w-0 {
   min-width: 0px;
@@ -1453,10 +1447,6 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
-.bg-red-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
-}
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }
@@ -1577,9 +1567,6 @@ select {
 }
 .pt-8 {
   padding-top: 2rem;
-}
-.pr-6 {
-  padding-right: 1.5rem;
 }
 .pr-8 {
   padding-right: 2rem;

@@ -3,7 +3,7 @@
     <x-slot name="title">AFIP ERROR</x-slot>
 
     <x-slot name="content">
-      <div class="text-md text-red-800">{{ $afipError }}</div>
+      <div class="text-red-800 text-md">{{ $afipError }}</div>
     </x-slot>
 
     <x-slot name="footer">
@@ -31,7 +31,7 @@
 
     <x-slot name="content">
       <table class="w-full">
-        <thead class="bg-gray-800 text-gray-100">
+        <thead class="text-gray-100 bg-gray-800">
           <tr>
             <th>Productos</th>
             @if (($products!=[]) && ($products->count() ==1))
@@ -87,7 +87,7 @@
     <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
       <div class="flex items-center px-3 py-2 text-white bg-gray-600">
         <div>
-          <x-svg.fileInvoice class="h-8 w-8" />
+          <x-svg.fileInvoice class="w-8 h-8" />
         </div>
         <div class="w-full mx-1">
           <label for="CbteTipo" class="block text-sm">
@@ -118,25 +118,25 @@
 
       <div class="flex px-4 py-2 overflow-hidden">
         <div class="w-3/4">
-          <x-svg.user class="h-8 w-8 inline" /> {{ $customer->id ?? 'N/A' }}: {{ $customer->name ?? 'N/A' }} »
+          <x-svg.user class="inline w-8 h-8" /> {{ $customer->id ?? 'N/A' }}: {{ $customer->name ?? 'N/A' }} »
           {{ $customer->business_name ?? 'N/A' }}
         </div>
         <div class="w-1/4">
-          <x-svg.warehouse class="h-8 w-8 inline" /> {{ $warehouse->id ?? 'N/A' }}:
+          <x-svg.warehouse class="inline w-8 h-8" /> {{ $warehouse->id ?? 'N/A' }}:
           {{ $warehouse->name ?? 'N/A' }}
         </div>
       </div>
 
       <div class="flex px-4 py-1 bg-gray-300">
-        <div class="w-3/4 flex align-middle">
-          <span><x-svg.barcodeScan class="mr-1 mt-4" /></span>
-          <x-jet-input wire:model.lazy="search" wire:keydown.enter='inputBarcode()' class="w-max mr-1"
+        <div class="flex w-3/4 align-middle">
+          <span><x-svg.barcodeScan class="mt-4 mr-1" /></span>
+          <x-jet-input wire:model.lazy="search" wire:keydown.enter='inputBarcode()' class="mr-1 w-max"
             type="text" />
 
-          <span><x-svg.collection class="mr-1 mt-4" /></span>
+          <span><x-svg.collection class="mt-4 mr-1" /></span>
             <x-jet-input wire:model="quantity" class="mr-1" type="number" min="1" max="9999" />
 
-            <select wire:model="defaultPriceCol" class="mx-1 appearance-none pr-8">
+            <select wire:model="defaultPriceCol" class="pr-8 mx-1 appearance-none">
               <option value="1">Precio 1</option>
               <option value="2">Precio 2</option>
             </select>
@@ -148,7 +148,7 @@
       </div>
 
       <table class="w-full">
-        <thead class="bg-gray-800 text-gray-100">
+        <thead class="text-gray-100 bg-gray-800">
           <tr>
             <th class="px-4 py-2">Código</th>
             <th class="px-4 py-2">Descripción</th>
