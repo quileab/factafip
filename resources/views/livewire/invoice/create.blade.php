@@ -13,7 +13,7 @@
     </x-slot>
   </x-jet-dialog-modal>
 
-  <x-jet-dialog-modal icon='edit' wire:model="openModal">
+  <x-jet-dialog-modal icon='edit' wire:model="openModal" maxWidth="full">
     <x-slot name="title">
       <div class="flex items-center">
         <x-svg.cartPlus class="w-8 h-8 mr-2" />
@@ -30,13 +30,14 @@
     </x-slot>
 
     <x-slot name="content">
-      <table class="w-full">
+      <table class="w-full overflow-hidden rounded-md">
         <thead class="text-gray-100 bg-gray-800">
           <tr>
             <th>Productos</th>
             @if (($products!=[]) && ($products->count() ==1))
             <th>Precios</th>
             <th>Descuento</th>
+            <th><x-svg.collection /></th>
             @endif
           </tr>
         </thead>
@@ -58,9 +59,11 @@
                 </select>
 
               </td>
-              <td>
+              <td class="flex">
                 <x-jet-input type="number" min="0" max="{{$product->discount_max}}"
                   wire:model.lazy="discount" />
+              </td>
+              <td>
                   <x-jet-button wire:click="addToCart({{$product->id}},{{$priceColumn}})" class="ml-2">
                     <x-svg.cartPlus class="w-5 h-5" />
                   </x-jet-button>
@@ -142,7 +145,7 @@
             </select>
 
         </div>
-        <div class="w-1/4 text-lg text-right">
+        <div class="w-1/4 text-2xl text-right">
           <small>TOTAL: $</small> <strong>{{ $total_integer }}</strong>,<sup>{{ $total_decimal }}</sup><br />
         </div>
       </div>
@@ -150,14 +153,15 @@
       <table class="w-full">
         <thead class="text-gray-100 bg-gray-800">
           <tr>
-            <th class="px-4 py-2">Código</th>
-            <th class="px-4 py-2">Descripción</th>
-            <th class="px-4 py-2">Cantidad</th>
-            <th class="px-4 py-2">Precio Unitario</th>
-            <th class="px-4 py-2">Desc.%</th>
-            <th class="px-4 py-2">Subtotal</th>
-            <th class="px-4 py-2">
-              <x-jet-secondary-button wire:click="searchProductsModal">
+            <th class="px-2 py-2">Código</th>
+            <th class="px-2 py-2">Descripción</th>
+            <th class="px-2 py-2">Cant.</th>
+            <th class="px-2 py-2">Precio Unitario</th>
+            <th class="px-2 py-2">Desc. %</th>
+            <th class="px-2 py-2">Subtotal</th>
+            <th class="px-2 py-2">
+              <x-jet-secondary-button wire:click="searchProductsModal"
+                accesskey="a">
                 <x-svg.cartPlus /> Agregar
               </x-jet-secondary-button>
             </th>
@@ -165,14 +169,14 @@
         </thead>
         <tbody>
           @foreach ($cart as $key=>$item)
-            <tr>
-              <td class="px-4 py-2">{{ $item->id }}</td>
-              <td class="px-4 py-2">{{ $item->name }}</td>
-              <td class="px-4 py-2 text-right">{{ $item->qty }}</td>
-              <td class="px-4 py-2 text-right">{{ number_format($item->price, 2, ',', '.') }}</td>
-              <td class="px-4 py-2 text-center">{{ $item->discountRate }}</td>
-              <td class="px-4 py-2 text-right">{{ number_format($item->qty * ($item->price-($item->price*$item->discountRate/100)), 2, ',', '.') }}</td>
-              <td class="px-4 py-2">
+            <tr class="max-h-1">
+              <td class="px-2 py-2 text-center">{{ $item->id }}</td>
+              <td class="px-2 py-2 text-sm">{{ $item->name }}</td>
+              <td class="px-2 py-2 text-right">{{ $item->qty }}</td>
+              <td class="px-2 py-2 text-right">{{ number_format($item->price, 2, ',', '.') }}</td>
+              <td class="px-2 py-2 text-center">{{ $item->discountRate }}</td>
+              <td class="px-2 py-2 text-right">{{ number_format($item->qty * ($item->price-($item->price*$item->discountRate/100)), 2, ',', '.') }}</td>
+              <td class="px-2 py-2 text-center">
               <x-jet-danger-button wire:click="removeItem('{{ $item->rowId }}')">
                 <x-svg.trash />
               </x-jet-danger-button>

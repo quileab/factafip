@@ -259,14 +259,14 @@
                 <td class="border px-4 py-2">{{ $product->brand }}</td>
                 <td class="border px-4 py-2">{{ $product->model }}</td>
                 <td class="border px-4 py-2">{{ $product->description }}</td>
-                <td class="border px-4 py-2 text-right">
-                  <x-jet-button wire:click="edit({{ $product->id }})" class="mr-2">
+                <td class="border px-4 py-2 text-right flex">
+                  <x-jet-button wire:click="edit({{ $product->id }})" class="mr-1">
                     <x-svg.edit />
                   </x-jet-button>
-                  <x-jet-danger-button wire:click="delete({{ $product->id }})" class="mr-2">
+                  <x-jet-danger-button wire:click="delete({{ $product->id }})" class="mr-1">
                     <x-svg.trash />
                   </x-jet-danger-button>
-                  <x-jet-secondary-button wire:click="openInventory({{ $product->id }})" class="mr-2">
+                  <x-jet-secondary-button wire:click="openInventory({{ $product->id }})" class="mr-1">
                     <x-svg.cube />Stock</x-jet-secondary-button>
                 </td>
               </tr>

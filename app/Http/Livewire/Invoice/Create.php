@@ -275,7 +275,7 @@ class Create extends Component
         if(!isset($res['CAE'])){
             $this->afipError=utf8_decode($res);
             $this->afipModal=true;
-            return;
+            return; // ERROR
         }
         
         $res['CUIT']=$cuit;
@@ -284,9 +284,17 @@ class Create extends Component
         $data['itemDetail']=$itemDetail;
         session()->put('invoiceData',$data);
 
+
         if ($this->debugging) {
             dd($data, strlen(serialize($data)));
         }
+        // store invoice data in vouchers table
+        $voucher = new \App\Models\Voucher;
+        $voucher->id=$data['CbteTipo'].'-'.$data['PtoVta'].'-'.$data['CbteDesde'];
+        $voucher->data=$data;
+        $voucher->save();
+
+
         
         //$res['CAE']; //CAE asignado el comprobante
         //$res['CAEFchVto']; //Fecha de vencimiento del CAE (yyyy-mm-dd)

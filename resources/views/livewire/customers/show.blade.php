@@ -88,7 +88,6 @@
         </select>
       </div>
 
-
       <div class="flex">
         <div class="w-full ml-3">
           <x-jet-label value="EMail" />
@@ -144,9 +143,9 @@
       </div>
       <div class="pb-4">
         {{-- show list of customers in table --}}
-        <table class="table-auto w-full">
+        <table class="w-full table-auto">
           <thead>
-            <tr class="bg-gray-800 text-white">
+            <tr class="text-white bg-gray-800">
               <th class="px-4 py-2">ID</th>
               <th class="px-4 py-2">Nombre</th>
               <th class="px-4 py-2">Empresa</th>
@@ -156,13 +155,13 @@
           <tbody>
             @foreach ($customers as $customer)
               <tr>
-                <td class="border px-4 py-2">{{ $customer->id }}</td>
-                <td class="border px-4 py-2">{{ $customer->name }}</td>
-                <td class="border px-4 py-2">{{ $customer->business_name }}</td>
-                <td class="border px-4 py-2 text-right">
-                  <x-jet-button wire:click="edit({{ $customer->id }})" class="mr-2"><x-svg.edit /></x-jet-button>
-                  <x-jet-danger-button wire:click="delete({{ $customer->id }})" class="mr-2"><x-svg.trash /></x-jet-danger-button>
-                  <x-jet-secondary-button wire:click="invoice({{ $customer->id }})" class="mr-2"><x-svg.fileInvoice /></x-jet-secondary-button>
+                <td class="px-4 py-2 border">{{ $customer->id }}</td>
+                <td class="px-4 py-2 border">{{ $customer->name }}</td>
+                <td class="px-4 py-2 border">{{ $customer->business_name }}</td>
+                <td class="flex px-4 py-2 text-right border">
+                  <x-jet-button wire:click="edit({{ $customer->id }})" class="mr-1"><x-svg.edit /></x-jet-button>
+                  <x-jet-danger-button wire:click="delete({{ $customer->id }})" class="mr-1"><x-svg.trash /></x-jet-danger-button>
+                  <x-jet-secondary-button wire:click="invoice({{ $customer->id }})" class="mr-1"><x-svg.fileInvoice /></x-jet-secondary-button>
                 </td>
               </tr>
             @endforeach
