@@ -36,6 +36,10 @@ class pdfController extends Controller
 
         // otros datos
         $customer=\App\Models\Customer::find($data['DocNro']);
+        // if customer null search customer by CUIT field
+        if(!$customer){
+            $customer=\App\Models\Customer::where('cuit',$data['DocNro'])->first();
+        }
         $data['customer']=$customer;
         //dd($customer,$data);
         $data['customer']->responsibility_type_id=\App\Models\ResponsibilityType::find($data['customer']->responsibility_type_id)->value;
@@ -71,7 +75,15 @@ class pdfController extends Controller
         ]);
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->stream("preview.pdf");
+        //clear invoiceData session 
+        session()->forget('invoiceData');
+
+        // return $pdf->stream("preview.pdf");
+        return $pdf->download(
+            (int) $data['CbteTipo'].'-'.
+            (int) $data['PtoVta'].'-'.
+            (int) $data['CbteDesde'].'.pdf'    
+        );
     }
 
     public function htmlinvoice(){

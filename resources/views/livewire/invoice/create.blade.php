@@ -196,15 +196,17 @@
   <x-jet-button color="green" wire:click="$set('debugging', {{!$debugging}})" >
     debugCart {{$debugging}}
   </x-jet-button>
-  <a href="" target="_blank" class="text-gray-500">
-    <x-jet-button color="red">
-      PDF
-    </x-jet-button>
-  </a>
+
   @if($total > 0)
-  <x-jet-button wire:click="invoiceCreate" class="w-full">
+  {{-- <x-jet-button wire:click="invoiceCreate" class="w-full">
     <x-svg.fileInvoice /> Facturar
-  </x-jet-button>
+  </x-jet-button> --}}
+  <a href="#" target="_blank" 
+    class="px-3 py-2 text-white border-2 border-gray-700 rounded-md shadow-md bg-amber-500"
+      wire:click.prevent="invoiceCreate">
+    <x-svg.fileInvoice class="mr-2" /> Facturar
+  </a>
+  
   @endif
 
 

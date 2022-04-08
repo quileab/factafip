@@ -35,7 +35,7 @@ class Show extends Component
 
     public function mount()
     {
-        $this->customers=\App\Models\Customer::all();
+        $this->customers=\App\Models\Customer::limit(20)->get();
         $this->customers_id_type_id=\App\Models\CustomerIdType::orderBy('id','desc')->get();
         $this->province_id_type_id=\App\Models\ProvinceIdType::all();
         $this->responsibility_types_id=\App\Models\ResponsibilityType::all();
@@ -83,6 +83,12 @@ class Show extends Component
         $this->updating = false;
         $this->openModal = true;
     }
+    
+    public function delete(Customer $customer){
+        $customer->delete();
+        $this->customers=\App\Models\Customer::all();
+        $this->render();
+    }
 
     public function edit(Customer $customer){
         //dd($customer);
@@ -102,12 +108,6 @@ class Show extends Component
         $this->openModal=true;
     }
 
-    public function delete(Customer $customer){
-        $customer->delete();
-        $this->customers=\App\Models\Customer::all();
-        $this->render();
-    }
-
     public function update()
     {
         $this->validate([
@@ -123,19 +123,28 @@ class Show extends Component
             'customer_CUIT' => 'required',
         ]);
 
-        $customer = Customer::find($this->customer_id);
-        $customer->customer_id_type_id=$this->customer_id_type;
-        $customer->name=$this->customer_name;
-        $customer->business_name=$this->customer_business_name;
-        $customer->address=$this->customer_address;
-        $customer->city=$this->customer_city;
-        $customer->province_id_type_id=$this->customer_province_id;
-        $customer->phone=$this->customer_phone;
-        $customer->email=$this->customer_email;
-        $customer->responsibility_type_id=$this->customer_responsibility_type_id;
-        $customer->CUIT=$this->customer_CUIT;
-        $customer->save();
-        $this->customers=\App\Models\Customer::all();
+        if ((integer)$this->customer->id != (integer)$this->customer_id)
+        {
+            $customer_exists = Customer::find($this->customer_id);
+            if ($customer_exists)
+            {
+                $this->emit('toast','El nuevo ID se encuentra OCUPADO','warning');
+                return;
+            }
+        }
+        $this->customer->id= (integer)$this->customer_id;
+        $this->customer->customer_id_type_id=$this->customer_id_type;
+        $this->customer->name=$this->customer_name;
+        $this->customer->business_name=$this->customer_business_name;
+        $this->customer->address=$this->customer_address;
+        $this->customer->city=$this->customer_city;
+        $this->customer->province_id_type_id=$this->customer_province_id;
+        $this->customer->phone=$this->customer_phone;
+        $this->customer->email=$this->customer_email;
+        $this->customer->responsibility_type_id=$this->customer_responsibility_type_id;
+        $this->customer->CUIT=$this->customer_CUIT;
+        $this->customer->save();
+        $this->customers=\App\Models\Customer::limit(20)->get();
         $this->render();
         $this->openModal=false;
     }

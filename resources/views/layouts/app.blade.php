@@ -25,10 +25,10 @@ $nav_links = [
         'permission' => 'menu.products',
     ],
     [
-      'name' => 'Facturas',
-      'route' => route('invoices'),
-      'active' => request()->routeIs('invoices'),
-      'permission'=>'menu.invoices',
+        'name' => 'Facturas',
+        'route' => route('invoices'),
+        'active' => request()->routeIs('invoices'),
+        'permission' => 'menu.invoices',
     ],
     // [
     //   'name' => 'Libros',
@@ -63,13 +63,13 @@ $nav_links = [
 ];
 @endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>{{ config('app.name', 'Laravel') }}</title>
+  <title>{{ config('app.name', 'FactAfip') }}</title>
   <!-- Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
   <!-- Material Icons -->
@@ -87,6 +87,14 @@ $nav_links = [
       font-size: 1.2rem !important;
     }
 
+    .bg-img {
+      background-color: #fafafa;
+      background-image: url("{{ asset('img/wallpaper.jpg') }}");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
   </style>
   @livewireStyles
 
@@ -96,7 +104,7 @@ $nav_links = [
 
 <body>
   {{-- qb template --}}
-  <div class="relative min-h-screen md:flex">
+  <div id="bg" class="relative min-h-screen md:flex">
     {{-- mobile navbar --}}
     <div class="flex justify-between text-gray-100 bg-gray-800 md:hidden">
       {{-- logo --}}
@@ -218,8 +226,7 @@ $nav_links = [
       <nav class="text-gray-50 overflow-hidden">
         @foreach ($nav_links as $nav_link)
           {{-- @can($nav_link['permission']) --}}
-          <x-jet-nav-link class="block w-full px-4 py-2" href="{{ $nav_link['route'] }}"
-            :active="$nav_link['active']">
+          <x-jet-nav-link class="block w-full px-4 py-2" href="{{ $nav_link['route'] }}" :active="$nav_link['active']">
             &nbsp;&nbsp; {{ __($nav_link['name']) }}
           </x-jet-nav-link>
           {{-- <br /> --}}
@@ -230,7 +237,7 @@ $nav_links = [
     </div>
 
     {{-- content --}}
-    <div class="flex-1 py-0 mx-auto bg-gray-500">
+    <div class="bg-img flex-1 py-0 mx-auto">
       <!-- Page Content -->
       <main>
         @livewire('assets.bookmark')
@@ -247,16 +254,16 @@ $nav_links = [
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script>
     //on input get focus select all text vanilla js
-    document.querySelectorAll('input').forEach(function (input) {
-      input.addEventListener('focus', function () {
+    document.querySelectorAll('input').forEach(function(input) {
+      input.addEventListener('focus', function() {
         this.select();
       });
     });
 
     //livewire set focus to control
     window.livewire.on('setfocus', (id) => {
-      window.setTimeout(function () { 
-      document.getElementById(id).focus();
+      window.setTimeout(function() {
+        document.getElementById(id).focus();
       }, 250);
     });
 
@@ -269,11 +276,21 @@ $nav_links = [
         icon = 'success'
       }
       switch (icon) {
-        case 'success': bgcolor = '#237539'; break;
-        case 'warning': bgcolor = '#d67200'; break;
-        case 'error':   bgcolor = '#b80000'; break;
-        case 'info':    bgcolor = '#0a3f80'; break;
-        case 'question':bgcolor = '#8a0a61'; break;
+        case 'success':
+          bgcolor = '#237539';
+          break;
+        case 'warning':
+          bgcolor = '#d67200';
+          break;
+        case 'error':
+          bgcolor = '#b80000';
+          break;
+        case 'info':
+          bgcolor = '#0a3f80';
+          break;
+        case 'question':
+          bgcolor = '#8a0a61';
+          break;
       }
       Swal.fire({
         icon: icon,

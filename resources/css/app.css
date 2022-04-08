@@ -7,12 +7,12 @@
 }
 
 .d2c{
-  background: #e00b33;
-  background: linear-gradient(90deg, #e00b33 15%, #a1049f 100%);
+  background: #420d79;
+  background: linear-gradient(90deg, #981b9b 15%, #420d79 100%);
 }
 .c2d{
-  background: #550614;
-  background: linear-gradient(0deg, #550614 15%, #30022f 100%);
+  background: #420d79;
+  background: linear-gradient(0deg, #420d79 15%, #981b9b 100%);
 }
 
 select{
