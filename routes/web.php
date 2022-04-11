@@ -5,7 +5,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\pdfController;
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect('/login');
+});
+Route::get('/register', function () {
+    return redirect('/login');
 });
 
 // logged only routes

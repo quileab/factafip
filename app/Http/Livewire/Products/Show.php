@@ -55,7 +55,7 @@ class Show extends Component
         $this->foreign_categories=\App\Models\Category::all();
         $this->foreign_taxes=\App\Models\TaxConditionType::where('value','>','0')->get();
         $this->foreign_units=\App\Models\UnitType::all();
-        $this->products=\App\Models\Product::all();
+        $this->products=\App\Models\Product::limit(20)->get();
         $this->warehouse_id=session('warehouse_id');
     }
 
@@ -146,13 +146,13 @@ class Show extends Component
 
         $this->updating = false;
         $this->openModal = false;
-        $this->products=\App\Models\Product::all();
+        $this->products=\App\Models\Product::limit(20)->get();
     }
 
     public function delete(Product $product)
     {
         $product->delete();
-        $this->products=\App\Models\Product::all();
+        $this->products=\App\Models\Product::limit(20)->get();
     }
 
     public function edit(Product $product)
@@ -177,7 +177,6 @@ class Show extends Component
         $this->emit('setfocus', 'product_category_id');
         $this->updating = true;
         $this->openModal = true;
-        
     }
 
     public function create(){
@@ -221,12 +220,11 @@ class Show extends Component
         ]);
         $product->save();
 
-        $this->products=\App\Models\Product::all();
+        $this->products=\App\Models\Product::limit(20)->get();
         $this->updating = false;
         $this->openModal = false;
         $this->render();
     }
-
 
     public function calcSalePrice($n)
     {
