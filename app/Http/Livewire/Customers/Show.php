@@ -57,11 +57,16 @@ class Show extends Component
     }
 
     public function UpdatingSearch($search)
-    { 
+    {
         $this->search = $search;
-        $this->customers=\App\Models\Customer::where('name','like','%'.$this->search.'%')
-            ->orWhere('business_name','like','%'.$this->search.'%')
-            ->get();
+
+        $searchValues = preg_split('/\s+/', $this->search, -1, PREG_SPLIT_NO_EMPTY);
+        $this->customers=\App\Models\Customer::where(function($query) use ($searchValues){
+            foreach ($searchValues as $srch) {
+                $query->whereRaw(\Illuminate\Support\Facades\DB::raw('CONCAT(business_name,name) LIKE "%'.$srch.'%"'));
+            }
+        })->get();
+        //->orderBy($this->sort,$this->direction)->paginate($this->cant);
         $this->render();
     } 
     

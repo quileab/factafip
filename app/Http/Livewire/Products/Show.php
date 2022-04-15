@@ -72,11 +72,14 @@ class Show extends Component
     public function UpdatingSearch($search)
     { 
         $this->search = $search;
-        $this->products=\App\Models\Product::where('description','like','%'.$this->search.'%')
-            ->orWhere('model','like','%'.$this->search.'%')
-            ->orWhere('brand','like','%'.$this->search.'%')
-            ->orWhere('barcode','like','%'.$this->search.'%')
-            ->get();
+
+        $searchValues = preg_split('/\s+/', $this->search, -1, PREG_SPLIT_NO_EMPTY);
+        $this->products=\App\Models\Product::where(function($query) use ($searchValues){
+            foreach ($searchValues as $srch) {
+                $query->whereRaw(\Illuminate\Support\Facades\DB::raw('CONCAT(description,model,brand) LIKE "%'.$srch.'%"'));
+            }
+        })->get();
+        //->orderBy($this->sort,$this->direction)->paginate($this->cant);
         $this->render();
     }
 
