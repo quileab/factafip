@@ -30,6 +30,5 @@ class AppServiceProvider extends ServiceProvider
             session(['warehouse_id'=>$default_warehouse ?? null]);
             session(['warehouse_name'=>$default_warehouse_name ?? null]);
         }
-
     }
 }

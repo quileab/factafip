@@ -7,7 +7,6 @@ use Livewire\Component;
 use Barryvdh\DomPDF\Facade as PDF;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use stdClass;
 
 class Create extends Component
 {
@@ -48,9 +47,21 @@ class Create extends Component
     public $invoice_concepto=0; // 0: Productos, 1: Servicios, 2: Productos y Servicios
     public $invoice_type_id;
     public $invoice_warehouse_id;
-    //public $invoice_currency_id;
+    public $invoice_currency_id;
 
-    // en mount tomar parametros
+    // listen to redirect event
+    protected $listeners = [
+        'voucherReset' => 'voucherReset',
+    ];
+
+    // function listen to redirect event
+    public function voucherReset()
+    {
+        Cart::destroy();
+        $this->emit('toast','Factura creada correctamente','success');
+        $this->render();
+    }
+
     public function mount()
     {
         $this->voucher_type_id=6;
@@ -275,7 +286,7 @@ class Create extends Component
         if(!isset($res['CAE'])){
             $this->afipError=utf8_decode($res);
             $this->afipModal=true;
-            return;
+            return; // ERROR
         }
         
         $res['CUIT']=$cuit;
@@ -287,12 +298,16 @@ class Create extends Component
         if ($this->debugging) {
             dd($data, strlen(serialize($data)));
         }
+        // store invoice data in vouchers table
+        $voucher = new \App\Models\Voucher;
+        $voucher->id=$data['CbteTipo'].'-'.$data['PtoVta'].'-'.$data['CbteDesde'];
+        $voucher->data=$data;
+        $voucher->save();
         
         //$res['CAE']; //CAE asignado el comprobante
         //$res['CAEFchVto']; //Fecha de vencimiento del CAE (yyyy-mm-dd)
-
-        return redirect()->route('pdf.invoice');
         
+        $this->emitSelf('voucherReset');
+        return redirect()->route('pdf.invoice');
     }
-
 }
