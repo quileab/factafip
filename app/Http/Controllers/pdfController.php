@@ -79,11 +79,9 @@ class pdfController extends Controller
         session()->forget('invoiceData');
 
         // return $pdf->stream("preview.pdf");
-        return $pdf->download(
-            (int) $data['CbteTipo'].'-'.
-            (int) $data['PtoVta'].'-'.
-            (int) $data['CbteDesde'].'.pdf'    
-        );
+        $filename='invoice-'.$data['CbteTipo'].'-'.$data['PtoVta'].'-'.$data['CbteDesde'].'.pdf';
+        $pdf->save(storage_path('app/public/invoices/'.$filename));
+        return $pdf->download($filename);
     }
 
     public function htmlinvoice(){

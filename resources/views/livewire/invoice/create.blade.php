@@ -193,7 +193,7 @@
     <div class="flex text-center">
       <a href="#" target="_blank" 
         class="px-3 py-2 text-white border-2 border-gray-700 rounded-md shadow-md bg-sky-700 hover:bg-sky-600"
-          wire:click.prevent="invoiceCreate">
+          wire:click="invoiceCreate">
         <x-svg.afip class="w-14 mr-2" /> Facturar
       </a>
     </div>

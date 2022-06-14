@@ -95,14 +95,13 @@ class Create extends Component
     public function UpdatingProdSearch($search)
     {
         if (strlen($search)>2) {
-            $this->products=\App\Models\Product::where('description', 'like', '%'.$search.'%')
-            ->orWhere('model', 'like', '%'.$search.'%')
-            ->orWhere('brand', 'like', '%'.$search.'%')
-            ->orWhere('barcode', 'like', '%'.$search.'%')
-            ->get();
-            if (count($this->products)==1) {
-                $this->emit('setfocus','priceDropdown');
-            }
+            $this->search = $search;
+            $searchValues = preg_split('/\s+/', $this->search, -1, PREG_SPLIT_NO_EMPTY);
+            $this->products=\App\Models\Product::where(function($query) use ($searchValues){
+                foreach ($searchValues as $srch) {
+                    $query->whereRaw(\Illuminate\Support\Facades\DB::raw('CONCAT(description,model,brand) LIKE "%'.$srch.'%"'));
+                }
+            })->get();
         }else{
             $this->emit('toast','Debe ingresar más de 2 caracteres','error');
         }
