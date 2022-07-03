@@ -80,7 +80,7 @@ $nav_links = [
   <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
   <link rel="manifest" href="{{ asset('img/favicon/site.webmanifest') }}">
   <!-- Styles -->
-  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+  @vite('resources/css/app.css')
   <style>
     .swal2-title {
       color: aliceblue !important;
@@ -99,7 +99,7 @@ $nav_links = [
   @livewireStyles
 
   <!-- Scripts -->
-  <script src="{{ mix('js/app.js') }}" defer></script>
+  @vite('resources/js/app.js')
 </head>
 
 <body>
