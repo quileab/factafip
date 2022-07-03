@@ -56,7 +56,7 @@ class Show extends Component
         $this->foreign_taxes=\App\Models\TaxConditionType::where('value','>','0')->get();
         $this->foreign_units=\App\Models\UnitType::all();
         $this->products=\App\Models\Product::limit(20)->get();
-        $this->warehouse_id=session('warehouse_id');
+        $this->warehouse_id=session('warehouse_id') ?? 1;
     }
 
     public function render()
@@ -278,14 +278,14 @@ class Show extends Component
         $this->validate([
             //check if the quantity is a number greater than 0
             'inventory_qty' => 'required|numeric|min:0',
+            'warehouse_id' => 'required|numeric',
+            'product_id' => 'required|numeric',
         ]);
         $inventory=\App\Models\Inventory::
-            where('product_id',$this->product_id)->
-            where('warehouse_id',$this->warehouse_id)->first();
-        if ($inventory) {
-            $inventory->quantity=$this->inventory_qty;
-            $inventory->save();
-        } else {
+        where('product_id',$this->product_id)->
+        where('warehouse_id',$this->warehouse_id)->
+        update(['quantity'=>$this->inventory_qty]);
+        if (!$inventory) {
             $inventory=new \App\Models\Inventory([
                 'product_id' => $this->product_id,
                 'warehouse_id' => $this->warehouse_id,

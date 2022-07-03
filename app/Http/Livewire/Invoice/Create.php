@@ -175,7 +175,7 @@ class Create extends Component
     }
 
     public function invoiceCreate(){
-        $fiscal=true;
+        $fiscal=false;
 
         $decimals = config('cart.format.decimals', 2);
         $cuit = (int) preg_replace('/[^0-9]/', '', \App\Models\Config::find('cuit')->value);
@@ -287,7 +287,20 @@ class Create extends Component
             $this->afipModal=true;
             return; // ERROR
         }
-        
+
+        // descontar stock del inventory del warehouse seleccionado
+        foreach (Cart::content() as $item) {
+            // get inventory quantity from warehouse
+            $inventory=\App\Models\Inventory::
+            where('product_id',$item->id)->
+            where('warehouse_id',$this->warehouse->id)->
+            decrement('quantity',$item->qty);
+
+            //dd($inventory, $item, $this->warehouse->id);
+        }
+
+
+
         $res['CUIT']=$cuit;
         $data['res']=$res;
         $data['items']=Cart::content();
