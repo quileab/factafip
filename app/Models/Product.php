@@ -37,4 +37,10 @@ class Product extends Model
     {
         return $this->hasOne(UnitType::class, 'id', 'unit_type_id');
     }
+
+    // relation with category with category_id value
+    public function category()
+    {
+        return $this->hasOne(Category::class, 'id', 'category_id');
+    }
 }

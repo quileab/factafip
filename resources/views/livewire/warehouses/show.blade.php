@@ -73,7 +73,7 @@
 
   <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
     <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
-      <div class="flex justify-between px-3 py-2 text-white bg-gray-600">
+      <div class="flex justify-between px-3 py-2 text-white d2c">
         <div class="flex ml-2 items-center">
           <x-svg.warehouse class="h-8 w-8" />
           <div class="ml-2 text-lg">Depósitos</div>
@@ -98,24 +98,24 @@
           <tbody>
             @foreach ($warehouses as $warehouse)
               <tr>
-                <td class="px-4 py-2">{{ $warehouse->id }}</td>
-                <td class="px-4 py-2">{{ $warehouse->name }}</td>
-                <td class="px-4 py-2">{{ $warehouse->contact_person }}</td>
-                <td class="px-4 py-2">{{ $warehouse->email }}</td>
-                <td class="px-4 py-2">{{ $warehouse->phone }}</td>
-                <td class="px-4 py-2 text-right">
-                  <x-jet-button wire:click="edit({{ $warehouse->id }})" class="mr-2">
+                <td class="px-4 py-1">{{ $warehouse->id }}</td>
+                <td class="px-4 py-1">{{ $warehouse->name }}</td>
+                <td class="px-4 py-1">{{ $warehouse->contact_person }}</td>
+                <td class="px-4 py-1">{{ $warehouse->email }}</td>
+                <td class="px-4 py-1">{{ $warehouse->phone }}</td>
+                <td class="px-4 py-1 text-right">
+                  <x-jet-button wire:click="edit({{ $warehouse->id }})" class="mr-1">
                     <x-svg.edit />
                   </x-jet-button>
-                  <x-jet-danger-button wire:click="delete({{ $warehouse->id }})" class="mr-2">
+                  <x-jet-danger-button wire:click="delete({{ $warehouse->id }})" class="mr-1">
                     <x-svg.trash />
                   </x-jet-danger-button>
                   @if ($warehouse->id != session()->get('warehouse_id'))
-                    <x-jet-button wire:click="setDefault({{ $warehouse->id }})" class="mr-2">
+                    <x-jet-button wire:click="setDefault({{ $warehouse->id }})" class="mr-1">
                       <x-svg.check />
                     </x-jet-button>
                   @else
-                    <x-jet-secondary-button class="mr-2" disabled>
+                    <x-jet-secondary-button class="mr-1" disabled>
                       <x-svg.warehouse />
                     </x-jet-secondary-button>
                   @endif

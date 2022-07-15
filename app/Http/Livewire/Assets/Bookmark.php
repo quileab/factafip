@@ -30,7 +30,6 @@ class Bookmark extends Component
     public function setBookmark($id){
         session(['bookmark'=>$id]);
         $this->bkmk=$id;
-        //$this->emit('toast',' Registro eliminado','error');
     }
     public function removeBookmark(){
         session()->forget('bookmark');

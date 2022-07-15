@@ -21,7 +21,6 @@ class Create extends Component
     
     // Livewire properties
     public $defaultPriceCol=1;
-    public $priceColumn=1;
     public $invoice;
     public $invoices=[];
     public $customer_id_type=96;
@@ -31,7 +30,7 @@ class Create extends Component
     public $voucher_types=[];
     public $products=[];
     public $quantity=1;
-    public $price;
+    public $price=null;
     public $discount=0;
     //public $subtotal;
     public $total;
@@ -95,8 +94,8 @@ class Create extends Component
     public function UpdatingProdSearch($search)
     {
         if (strlen($search)>2) {
-            $this->search = $search;
-            $searchValues = preg_split('/\s+/', $this->search, -1, PREG_SPLIT_NO_EMPTY);
+            //$this->search = $search;
+            $searchValues = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY);
             $this->products=\App\Models\Product::where(function($query) use ($searchValues){
                 foreach ($searchValues as $srch) {
                     $query->whereRaw(\Illuminate\Support\Facades\DB::raw('CONCAT(description,model,brand) LIKE "%'.$srch.'%"'));
@@ -107,8 +106,7 @@ class Create extends Component
         }
     }
 
-    public function inputBarcode()
-    {
+    public function inputBarcode(){
         $search=$this->search;
         $this->search='';
         if (strlen($search)==13) {
@@ -116,7 +114,8 @@ class Create extends Component
             if ($this->product==null) {
                 $this->emit('toast','No se encontró el producto','error');
             }else{
-                $this->addToCart($this->product->id,$this->defaultPriceCol);
+                $price=$this->defaultPriceCol==1?$this->product->sale_price1:$this->product->sale_price2;
+                $this->addToCart($this->product->id,$price);
             }
         } else {
             $this->emit('toast','Error en código de barras','error');
@@ -124,6 +123,12 @@ class Create extends Component
     }
 
     public function searchProductsModal(){
+    
+        if (Cart::content()->count()>30) {
+            $this->emit('toast','No se pueden agregar más de 30 productos','error');
+            return;
+        }
+
         $this->reset('products','ProdSearch','discount');
         $this->emit('setfocus','ProdSearch');
 
@@ -140,15 +145,19 @@ class Create extends Component
         $this->emit('setfocus','priceDropdown');
     }
 
-    public function addToCart($product,$priceColumn)
-    {
+    public function addToCart($product,$price){
         $product=\App\Models\Product::find($product);
-        // I´ve used if instead switch because there´s only 2 options
-        if ($priceColumn==2) {
-            $price=$product->sale_price2;
-        } else {
-            $price=$product->sale_price1;
+        // check if $price is greater or equal than product's sale_price1
+        if ($price<$product->sale_price1) {
+            $this->emit('toast','Precio por debajo de lo permitido','error');
+            return;
         }
+        $price=$price;
+        // if ($price==2) {
+        //     $price=$product->sale_price2;
+        // } else {
+        //     $price=$product->sale_price1;
+        // }
 
         $cartItem=Cart::add(
             $product->id,
@@ -157,6 +166,7 @@ class Create extends Component
             $price,0)->associate('App\Models\Product');
         Cart::setTax($cartItem->rowId,floatval($product->tax->value));
         Cart::setDiscount($cartItem->rowId,floatval($this->discount));
+        $this->price=null;
        
         $this->openModal=false;
     }
@@ -276,8 +286,8 @@ class Create extends Component
             }
         } else {
             $res = [
-                'CAE' => '72027983789500',
-                'CAEFchVto' => '2022-01-21',
+                'CAE' => '---- NO FISCAL ----',
+                'CAEFchVto' => '2022-12-31',
             ];
         }
 
@@ -299,8 +309,6 @@ class Create extends Component
             //dd($inventory, $item, $this->warehouse->id);
         }
 
-
-
         $res['CUIT']=$cuit;
         $data['res']=$res;
         $data['items']=Cart::content();
@@ -315,11 +323,12 @@ class Create extends Component
         $voucher->id=$data['CbteTipo'].'-'.$data['PtoVta'].'-'.$data['CbteDesde'];
         $voucher->data=$data;
         $voucher->save();
-        
+
         //$res['CAE']; //CAE asignado el comprobante
         //$res['CAEFchVto']; //Fecha de vencimiento del CAE (yyyy-mm-dd)
         
         $this->emitSelf('voucherReset');
+        
         return redirect()->route('pdf.invoice');
     }
 }

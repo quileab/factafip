@@ -81,7 +81,8 @@ class pdfController extends Controller
         // return $pdf->stream("preview.pdf");
         $filename='invoice-'.$data['CbteTipo'].'-'.$data['PtoVta'].'-'.$data['CbteDesde'].'.pdf';
         $pdf->save(storage_path('app/public/invoices/'.$filename));
-        return $pdf->download($filename);
+        // return $pdf->download($filename);
+        return redirect()->route('printed',['filename'=>$filename ]);   
     }
 
     public function htmlinvoice(){

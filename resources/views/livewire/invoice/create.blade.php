@@ -53,17 +53,18 @@
               </td>
               @if (($products!=[]) && ($products->count() ==1))
               <td>
-                <select wire:model="priceColumn" id="priceDropdown" class="w-full">
-                  <option value="1">{{currency_format($product->sale_price1)}}</option>
-                  <option value="2">{{currency_format($product->sale_price2)}}</option>
-                </select>
+                <input list="prices" wire:model="price" id="priceDropdown" autocomplete="off" class="w-full" /></label>
+                <datalist id="prices">
+                  <option value="{{$product->sale_price1}}">
+                  <option value="{{$product->sale_price2}}">
+                </datalist>               
               </td>
               <td>
                 <x-jet-input type="number" min="0" max="{{$product->discount_max}}" class="w-full"
                   wire:model.lazy="discount" />
               </td>
               <td>
-                  <button wire:click="addToCart({{$product->id}},{{$priceColumn}})"
+                  <button wire:click="addToCart({{$product->id}},{{$price}})"
                     class="m-0 px-4 py-2 w-full border-2 border-white focus:outline-none text-white bg-green-800 hover:bg-green-700 focus:ring-4 focus:ring-purple-500 rounded-lg text-sm">
                     <x-svg.cartPlus class="inline w-5 h-5 mx-auto" />
                   </button>
@@ -88,7 +89,7 @@
 
   <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
     <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
-      <div class="flex items-center px-3 pt-2 text-white bg-gray-600">
+      <div class="flex items-center px-3 pt-2 text-white d2c">
         <div>
           <x-svg.fileInvoice class="w-8 h-8" />
         </div>
@@ -134,12 +135,10 @@
 
           <x-svg.collection class="inline mt-3 mr-1" />
             <x-jet-input wire:model="quantity" class="mr-1 py-1" type="number" min="1" max="9999" />
-
             <select wire:model="defaultPriceCol" class="py-1 pr-8 mx-1 appearance-none">
               <option value="1">Precio 1</option>
               <option value="2">Precio 2</option>
             </select>
-
         </div>
         <div class="text-center pt-1 w-1/4 text-3xl bg-gray-100">
           <small>TOTAL: $</small> <strong>{{ $total_integer }}</strong>,<sup>{{ $total_decimal }}</sup><br />
@@ -159,7 +158,9 @@
               {{-- green button rounded with text Agregar --}}
               <button class="bg-green-700 hover:bg-green-600 text-white font-bold py-1 px-2 rounded uppercase text-xs"
                 wire:click="searchProductsModal" accesskey="a">
-                <x-svg.cartPlus class="inline mr-1" />Agregar
+                <x-svg.cartPlus class="inline" />
+                {{Cart::content()->count();}}&ThinSpace;
+                Agregar
               </button>
             </th>
           </tr>
@@ -167,13 +168,13 @@
         <tbody>
           @foreach ($cart as $key=>$item)
             <tr class="max-h-1">
-              <td class="px-2 py-2 text-center">{{ $item->id }}</td>
-              <td class="px-2 py-2 text-sm">{{ $item->name }}</td>
-              <td class="px-2 py-2 text-right">{{ $item->qty }}</td>
-              <td class="px-2 py-2 text-right">{{ number_format($item->price, 2, ',', '.') }}</td>
-              <td class="px-2 py-2 text-center">{{ $item->discountRate }}</td>
-              <td class="px-2 py-2 text-right">{{ number_format($item->qty * ($item->price-($item->price*$item->discountRate/100)), 2, ',', '.') }}</td>
-              <td class="px-2 py-2 text-center">
+              <td class="px-2 py-1 text-center">{{ $item->id }}</td>
+              <td class="px-2 py-1 text-sm">{{ $item->name }}</td>
+              <td class="px-2 py-1 text-right">{{ $item->qty }}</td>
+              <td class="px-2 py-1 text-right">{{ number_format($item->price, 2, ',', '.') }}</td>
+              <td class="px-2 py-1 text-center">{{ $item->discountRate }}</td>
+              <td class="px-2 py-1 text-right">{{ number_format($item->qty * ($item->price-($item->price*$item->discountRate/100)), 2, ',', '.') }}</td>
+              <td class="px-2 py-1 text-center">
               <x-jet-danger-button wire:click="removeItem('{{ $item->rowId }}')">
                 <x-svg.trash />
               </x-jet-danger-button>
@@ -185,13 +186,12 @@
           @endforeach
         </tbody>
       </table>
-
-
     </div>
 
     @if($total > 0)
     <div class="flex text-center">
-      <a href="#" target="_blank" 
+      <a href="#"
+       {{-- target="_blank"  --}}
         class="px-3 py-2 text-white border-2 border-gray-700 rounded-md shadow-md bg-sky-700 hover:bg-sky-600"
           wire:click="invoiceCreate">
         <x-svg.afip class="w-14 mr-2" /> Facturar

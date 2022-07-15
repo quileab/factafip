@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>Voucher</title>
   <style>
     /* import from google fonts open sans */
     @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
@@ -284,9 +284,9 @@
         <thead style="background-color: #dddddd;">
           <tr>
             <th style="width:5%; overflow:hidden;" class="border-top border-left">Cód.</th>
-            <th style="width:60%;" class="border-top border-left">Descripción</th>
             <th style="width:10%;" class="border-top border-left">Cant.</th>
             <th style="width:10%;" class="border-top border-left">U. med.</th>
+            <th style="width:60%;" class="border-top border-left">Descripción</th>
             <th style="width:15%;" class="border-top border-left">Precio Unitario</th>
             <th style="width:10%;" class="border-top border-left">% Desc.</th>
            @if ($data['inv_letter'] == 'A')
@@ -300,9 +300,9 @@
           @foreach ($items as $item)
             <tr>
               <td class="border-left">{{ $item->id }}</td>
-              <td class="text-left border-left">{{ $item->name }}</td>
               <td class="border-left">{{ $item->qty }}</td>
               <td class="border-left">{{ $item->model->unit->value }}</td>
+              <td class="text-left border-left">{{ $item->name }}</td>
               <td class="text-right border-left">{{ currency_format($item->price) }}</td>
               <td class="text-right border-left">{{ $item->discountRate }}%</td>
               @if ($data['inv_letter'] == 'A')

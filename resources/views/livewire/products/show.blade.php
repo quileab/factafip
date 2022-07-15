@@ -223,7 +223,7 @@
 
   <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
     <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
-      <div class="flex justify-between px-3 py-2 text-white bg-gray-600">
+      <div class="flex justify-between px-3 py-2 text-white d2c">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="currentColor" viewBox="0 0 512 512"
             stroke="currentColor">
@@ -244,7 +244,7 @@
           <thead>
             <tr class="bg-gray-800 text-white">
               <th class="px-4 py-2">ID</th>
-              <th class="px-4 py-2">Categoría</th>
+              <th class="px-4 py-2">Categ.</th>
               <th class="px-4 py-2">Marca</th>
               <th class="px-4 py-2">Producto/Modelo</th>
               <th class="px-4 py-2">Descripción</th>
@@ -254,20 +254,21 @@
           <tbody>
             @foreach ($products as $product)
               <tr>
-                <td class="border px-4 py-2">{{ $product->id }}</td>
-                <td class="border px-4 py-2">{{ $product->category_id }}</td>
-                <td class="border px-4 py-2">{{ $product->brand }}</td>
-                <td class="border px-4 py-2">{{ $product->model }}</td>
-                <td class="border px-4 py-2">{{ $product->description }}</td>
-                <td class="border px-4 py-2 text-right flex">
+                <td class="px-4 py-1">{{ $product->id }}</td>
+                <td class="px-4 py-1">{{ $product->category->name }}</td>
+                <td class="px-4 py-1">{{ $product->brand }}</td>
+                <td class="px-4 py-1">{{ $product->model }}</td>
+                <td class="px-4 py-1">{{ $product->description }}</td>
+                <td class="px-1 py-1 text-right inline-flex">
                   <x-jet-button wire:click="edit({{ $product->id }})" class="mr-1">
                     <x-svg.edit />
                   </x-jet-button>
+                  <x-jet-secondary-button title="VER STOCK" wire:click="openInventory({{ $product->id }})" class="mr-1">
+                    <x-svg.cube />
+                  </x-jet-secondary-button>
                   <x-jet-danger-button wire:click="delete({{ $product->id }})" class="mr-1">
                     <x-svg.trash />
                   </x-jet-danger-button>
-                  <x-jet-secondary-button wire:click="openInventory({{ $product->id }})" class="mr-1">
-                    <x-svg.cube />Stock</x-jet-secondary-button>
                 </td>
               </tr>
             @endforeach

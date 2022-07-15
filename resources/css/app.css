@@ -7,16 +7,16 @@
 }
 
 .d2c{
-  background: #420d79;
-  background: linear-gradient(90deg, #981b9b 15%, #420d79 100%);
+  background: #72153d;
+  background: linear-gradient(90deg, #623f62 15%, #72153d 100%);
 }
 .c2d{
-  background: #420d79;
-  background: linear-gradient(0deg, #420d79 15%, #981b9b 100%);
+  background: #623f62;
+  background: linear-gradient(0deg, #623f62 15%, #72153d 100%);
 }
 
-select{
-  @apply my-1 px-2 py-2 border-2 border-gray-500 rounded-md shadow-sm bg-gray-50 text-gray-900 focus:border-fuchsia-500 focus:outline-none focus:bg-white;
+select, input{
+  @apply bg-gray-50 text-gray-900 my-1 px-4 py-2 border-gray-500 focus:border-fuchsia-500 focus:ring focus:ring-fuchsia-500 focus:ring-opacity-50 rounded-md shadow-sm
 }
 
 tr:nth-child(even) {
