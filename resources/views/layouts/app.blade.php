@@ -79,8 +79,9 @@ $nav_links = [
   <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
   <link rel="manifest" href="{{ asset('img/favicon/site.webmanifest') }}">
-  <!-- Styles -->
+  <!-- Vite Styles -->
   @vite('resources/css/app.css')
+  <!-- Styles -->
   <style>
     .swal2-title {
       color: aliceblue !important;
@@ -95,7 +96,11 @@ $nav_links = [
       background-attachment: fixed;
     }
 
+    body{
+      color:black !important;
+    }
   </style>
+  <!-- Livewire Styles -->
   @livewireStyles
 
   <!-- Scripts -->

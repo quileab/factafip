@@ -24,6 +24,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/warehouses', App\Http\Livewire\Warehouses\Show::class)->name('warehouses');
     Route::get('/products', App\Http\Livewire\Products\Show::class)->name('products');
     Route::get('/invoices/{customer_id?}/{CbteTipo?}/{PtoVta?}', App\Http\Livewire\Invoice\Create::class)->name('invoices');
+    // LaterFiles Route class
+    Route::get('/laterfiles', App\Http\Livewire\LaterFiles::class)->name('laterfiles');
     
     // Inform to user that Printed Document is ready to download
     Route::get('/printed/{filename?}', function ($filename) { 

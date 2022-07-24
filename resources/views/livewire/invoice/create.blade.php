@@ -1,11 +1,26 @@
 <div>
+  <x-jet-dialog-modal icon='edit' wire:model="openSaveModal">
+    <x-slot name="title">Guardar Lista de Productos como...</x-slot>
+    <x-slot name="content">
+      <x-jet-input type="text" wire:model.defer='invoiceSaveName' class="w-full" />
+    </x-slot>
+    <x-slot name="footer">
+      <div class="flex justify-between">
+      <x-jet-secondary-button wire:click="$toggle('openSaveModal')" wire:loading.attr="disabled">
+        Salir
+      </x-jet-secondary-button>
+      <x-jet-button wire:click="invoiceSave" wire:loading.attr="disabled">
+        Guardar
+      </x-jet-button>
+      </div>
+    </x-slot>
+  </x-jet-dialog-modal>
+
   <x-jet-dialog-modal icon='edit' wire:model="afipModal">
     <x-slot name="title">AFIP ERROR</x-slot>
-
     <x-slot name="content">
       <div class="text-red-800 text-md">{{ $afipError }}</div>
     </x-slot>
-
     <x-slot name="footer">
       <x-jet-secondary-button wire:click="$toggle('afipModal')" wire:loading.attr="disabled">
         Salir
@@ -64,7 +79,7 @@
                   wire:model.lazy="discount" />
               </td>
               <td>
-                  <button wire:click="addToCart({{$product->id}},{{$price}})"
+                  <button wire:click="addToCart({{$product->id}},'{{$price}}')"
                     class="m-0 px-4 py-2 w-full border-2 border-white focus:outline-none text-white bg-green-800 hover:bg-green-700 focus:ring-4 focus:ring-purple-500 rounded-lg text-sm">
                     <x-svg.cartPlus class="inline w-5 h-5 mx-auto" />
                   </button>
@@ -188,16 +203,28 @@
       </table>
     </div>
 
-    @if($total > 0)
-    <div class="flex text-center">
-      <a href="#"
-       {{-- target="_blank"  --}}
-        class="px-3 py-2 text-white border-2 border-gray-700 rounded-md shadow-md bg-sky-700 hover:bg-sky-600"
-          wire:click="invoiceCreate">
-        <x-svg.afip class="w-14 mr-2" /> Facturar
-      </a>
+      <div class="flex text-center">
+      @if($total > 0)
+        <a href="#"
+        {{-- target="_blank"  --}}
+          class="px-3 py-1 text-white border-2 border-gray-700 rounded-md shadow-md bg-sky-700 hover:bg-sky-600"
+            wire:click="invoiceCreate">
+          <x-svg.afip class="w-14 mr-2" />Facturar
+        </a>
+
+        <a href="#"
+          class="px-3 py-1 text-white border-2 border-gray-700 rounded-md shadow-md bg-green-700 hover:bg-green-600"
+            wire:click="$set('openSaveModal',true)">
+          <x-svg.cloudUp class="w-14 mr-2" />Guardar
+        </a>
+
+      @endif
+        <a href="/laterfiles"
+        class="px-3 py-1 text-white border-2 border-gray-700 rounded-md shadow-md bg-green-700 hover:bg-green-600"
+        >
+        <x-svg.fileInvoice class="w-14 mr-2" />Buscar
+        </a>
     </div>
-    @endif
   </div>
 
   {{-- <x-jet-button color="green" wire:click="$set('debugging', {{!$debugging}})" >

@@ -8,11 +8,20 @@
 
 .d2c{
   background: #72153d;
-  background: linear-gradient(90deg, #623f62 15%, #72153d 100%);
+  background: linear-gradient(270deg, #623f62 15%, #72153d 100%);
 }
 .c2d{
   background: #623f62;
   background: linear-gradient(0deg, #623f62 15%, #72153d 100%);
+}
+
+input:-webkit-autofill {
+  /* caret-color: black; */
+  color: black;
+  /* webkit autofill */
+  -webkit-text-fill-color: black; 
+  /* -webkit-background-clip: text;  */
+  box-shadow: 0 0 0 50px white inset; 
 }
 
 select, input{

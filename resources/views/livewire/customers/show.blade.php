@@ -155,10 +155,10 @@
           <tbody>
             @foreach ($customers as $customer)
               <tr>
-                <td class="px-4 py-2 border">{{ $customer->id }}</td>
-                <td class="px-4 py-2 border">{{ $customer->name }}</td>
-                <td class="px-4 py-2 border">{{ $customer->business_name }}</td>
-                <td class="flex px-4 py-2 text-right border">
+                <td class="px-3 py-1 border">{{ $customer->id }}</td>
+                <td class="px-3 py-1 border">{{ $customer->name }}</td>
+                <td class="px-3 py-1 border">{{ $customer->business_name }}</td>
+                <td class="flex px-3 py-1 text-right border">
                   <x-jet-button wire:click="edit({{ $customer->id }})" class="mr-1"><x-svg.edit /></x-jet-button>
                   <x-jet-danger-button wire:click="delete({{ $customer->id }})" class="mr-1"><x-svg.trash /></x-jet-danger-button>
                   <x-jet-secondary-button wire:click="invoice({{ $customer->id }})" class="mr-1"><x-svg.fileInvoice /></x-jet-secondary-button>
@@ -167,8 +167,6 @@
             @endforeach
           </tbody>
         </table>
-
-
       </div>
     </div>
   </div>

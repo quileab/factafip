@@ -6,6 +6,7 @@ use Afip;
 use Livewire\Component;
 use Barryvdh\DomPDF\Facade as PDF;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class Create extends Component
@@ -14,6 +15,7 @@ class Create extends Component
     public $search = '';
     public $ProdSearch = '';
     public $openModal = false;
+    public $openSaveModal = false;
     public $afipModal = false;
     public $afipError = '';
     public $readyToLoad = false;
@@ -22,6 +24,7 @@ class Create extends Component
     // Livewire properties
     public $defaultPriceCol=1;
     public $invoice;
+    public $invoiceSaveName='';
     public $invoices=[];
     public $customer_id_type=96;
     public $customer;
@@ -330,5 +333,36 @@ class Create extends Component
         $this->emitSelf('voucherReset');
         
         return redirect()->route('pdf.invoice');
+    }
+
+    public function invoiceSave(){
+        // replace spaces with underscores
+        $this->invoiceSaveName=str_replace(' ','_',$this->invoiceSaveName);
+        //filter from $this->invoiceSaveName not valid characters
+        $this->invoiceSaveName=preg_replace('/[^A-Za-z0-9_]/', '', $this->invoiceSaveName);
+        // extract Cart content data in json format for later use
+        $data=[];
+        foreach (Cart::content() as $item) {
+            $data[]=[
+                'id'=>$item->id,
+                'qty'=>$item->qty,
+                'name'=>$item->name,
+                'price'=>$item->price,
+                'weight'=>$item->weight,
+                'options'=>$item->options,
+                'taxRate'=>$item->taxRate,
+                'discountRate'=>$item->discountRate,
+            ];
+        }
+
+        //dd($data,json_encode($data));
+        //save json file in public/storage/forLater/ folder
+        $fileName='/private/laterUse/invoice-'.
+            $this->customer->id.'-'.
+            $this->invoiceSaveName.'.json';
+
+        Storage::disk('local')->put($fileName,json_encode($data));
+        $this->openSaveModal=false;
+        $this->invoiceSaveName='';
     }
 }
