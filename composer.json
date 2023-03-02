@@ -12,7 +12,6 @@
         "afipsdk/afip.php": "^0.7.2",
         "barryvdh/laravel-dompdf": "^2.0",
         "bumbummen99/shoppingcart": "^4.1",
-        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^9.19",
         "laravel/jetstream": "^2.4",

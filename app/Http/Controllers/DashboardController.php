@@ -15,10 +15,11 @@ class DashboardController extends Controller
         */
         $afip = new Afip([
             'CUIT' => (int) preg_replace('/[^0-9]/', '', \App\Models\Config::find('cuit')->value),
-            'production' => false,
+            'production' => \App\Models\Config::find('production')->value==1 ? true : false,
             'cert' => 'DN1.crt',
             'key' => 'Private.key',
-            'environment' => 'homologation',
+            'environment' => \App\Models\Config::find('environment')->value,
+            'exceptions'=>true,
             ]);
 
         // AFIP server status    
@@ -27,10 +28,19 @@ class DashboardController extends Controller
             $data[$key] = $value;
         }
         
-        //último comprobante p.de venta 1, comprobante 6 (Factura B)
-        $data['Factura A 2'] = $afip->ElectronicBilling->GetLastVoucher(2,1);
-        $data['Factura B 2'] = $afip->ElectronicBilling->GetLastVoucher(2,6);
-
+        $fiscal=(bool)\App\Models\Config::find('fiscal')->value;
+        if ($fiscal) { // AFIP try access to last voucher
+            //último comprobante p.de venta 1, comprobante 6 (Factura B)
+            try { // to create ApiTokenForm ElectronicBilling
+                $data['Factura A 2'] = $afip->ElectronicBilling->GetLastVoucher(2, 1);
+                $data['Factura B 2'] = $afip->ElectronicBilling->GetLastVoucher(2, 6);
+            } catch (\Exception $e) {
+                $data['ERROR !']=$e->getMessage();
+                // set fiscal value to 0 in config
+                \App\Models\Config::whereId('fiscal')->update(['value' => 0]);
+                $data['Fiscal']='Ha sido deshabilitado';
+            }
+        }
         return view('dashboard',compact('data'));
     }
 }

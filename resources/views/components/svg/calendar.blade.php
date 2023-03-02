@@ -1,4 +1,6 @@
-<svg  {!! $attributes->merge(['class' => 'h-5 w-5']) !!}
-  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+<svg {!! $attributes->merge(['class' => 'h-5 w-5']) !!}
+  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+   fill="currentColor" stroke="currentColor">
+  <path d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z"/><path d="M5 22h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2zM19 8l.001 12H5V8h14z"/>
 </svg>
+

@@ -54,12 +54,12 @@ $nav_links = [
     //   'active' => request()->routeIs('permissions'),
     //   'permission'=>'menu.security',
     // ],
-    // [
-    //   'name' => 'Configuración',
-    //   'route' => route('configs'),
-    //   'active' => request()->routeIs('configs'),
-    //   'permission'=>'menu.config',
-    // ],
+    [
+      'name' => 'Configuración',
+      'route' => route('configs'),
+      'active' => request()->routeIs('configs'),
+      'permission'=>'menu.config',
+    ],
 ];
 @endphp
 <!DOCTYPE html>
@@ -227,7 +227,7 @@ $nav_links = [
           </x-jet-dropdown>
         </div>
       </div>
-
+      @livewire('assets.bookmark')
       <nav class="text-gray-50 overflow-hidden">
         @foreach ($nav_links as $nav_link)
           {{-- @can($nav_link['permission']) --}}
@@ -245,7 +245,6 @@ $nav_links = [
     <div class="bg-img flex-1 py-0 mx-auto">
       <!-- Page Content -->
       <main>
-        @livewire('assets.bookmark')
         {{ $slot }}
       </main>
     </div>

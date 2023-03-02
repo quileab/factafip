@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\pdfController;
+use App\Http\Livewire\ConfigComponent;
 
 Route::get('/', function () {
     // return view('welcome');
@@ -16,6 +17,7 @@ Route::get('/register', function () {
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
    
     Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
+    Route::get('/configs', App\Http\Livewire\ConfigComponent::class)->name('configs');
     Route::get('/pdf/invoice', [pdfController::class,'invoice'])->name('pdf.invoice');
     Route::get('/pdf/qrcode', [pdfController::class,'qrcode'])->name('pdf.qrcode');
     Route::get('/pdf/htmlinvoice', [pdfController::class,'htmlinvoice'])->name('pdf.htmlinvoice');

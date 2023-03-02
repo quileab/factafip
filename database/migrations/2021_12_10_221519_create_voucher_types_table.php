@@ -18,6 +18,7 @@ class CreateVoucherTypesTable extends Migration
             $table->string('value',82);
             $table->string('letter',1);
             $table->string('type',80);
+            $table->boolean('enabled')->defaul(1);
             //$table->timestamps();
         });
     }

@@ -5,17 +5,19 @@ namespace App\Http\Livewire\Invoice;
 use Afip;
 use Livewire\Component;
 use Barryvdh\DomPDF\Facade as PDF;
-use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Storage;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class Create extends Component
 {
     // Livewire utilities
     public $search = '';
+    public $searchType=false;
     public $ProdSearch = '';
     public $openModal = false;
     public $openSaveModal = false;
+    public $fiscal; // Global state if Enabled Fiscal Vouchers
     public $afipModal = false;
     public $afipError = '';
     public $readyToLoad = false;
@@ -64,8 +66,7 @@ class Create extends Component
         $this->render();
     }
 
-    public function mount()
-    {
+    public function mount() {
         $this->voucher_type_id=6;
         $this->invoice_PtoVta=$this->PtoVta;
         //$this->invoice_type_id=$this->CbteTipo;
@@ -80,11 +81,20 @@ class Create extends Component
             $this->emit('toast','No se encontró el Depósito','error');
         }
 
-        $this->voucher_types=\App\Models\VoucherType::all();
+        // if fiscal enabled read 'enabled voucher types' else NON FIscal types
+        $this->fiscal=(bool)\App\Models\Config::find('fiscal')->value;
+        $this->voucher_types=\App\Models\VoucherType::where('enabled', true)
+            ->when(!$this->fiscal, function($query) {
+                return $query->where('id','>', 5000);
+            })->get();
+
+        if (!$this->fiscal) {
+            $this->CbteTipo=$this->voucher_types->first()->id;
+        }
+
     }
 
-    public function render()
-    {
+    public function render() {
         $cart=Cart::content();
         $this->total=number_format(Cart::subtotal(),2,'.','');
         // format total
@@ -155,7 +165,7 @@ class Create extends Component
             $this->emit('toast','Precio por debajo de lo permitido','error');
             return;
         }
-        $price=$price;
+        // $price=$price;
         // if ($price==2) {
         //     $price=$product->sale_price2;
         // } else {
@@ -174,8 +184,7 @@ class Create extends Component
         $this->openModal=false;
     }
 
-    public function removeItem($rowId)
-    {
+    public function removeItem($rowId) {
         Cart::remove($rowId);
     }
 
@@ -187,9 +196,27 @@ class Create extends Component
         }
     }
 
-    public function invoiceCreate(){
-        $fiscal=false;
+    public function cartContentToArray($cart){
+        $data=[];
+        foreach ($cart as $item) {
+            $data[]=[
+                'id'=>$item->id,
+                'qty'=>$item->qty,
+                'name'=>$item->name,
+                'price'=>$item->price,
+                'weight'=>$item->weight,
+                'options'=>$item->options,
+                'taxRate'=>$item->taxRate,
+                'discountRate'=>$item->discountRate,
+            ];
+        }
+        return $data;
+    }
 
+    public function invoiceCreate(){
+        $fiscal=(bool)\App\Models\Config::find('fiscal')->value;
+        $production=(bool)\App\Models\Config::find('production')->value;
+        $environment=(string)\App\Models\Config::find('environment')->value;
         $decimals = config('cart.format.decimals', 2);
         $cuit = (int) preg_replace('/[^0-9]/', '', \App\Models\Config::find('cuit')->value);
         // create the taxes array and initialize it
@@ -205,7 +232,7 @@ class Create extends Component
             $Neto=round($Subtotal/(1+$item->taxRate/100),$decimals);
             $BaseImp=round($taxes[$item->tax_id]['BaseImp']+$Neto,$decimals);
             $Importe=round($taxes[$item->tax_id]['Importe']+($Subtotal-$Neto),$decimals);
-            
+            // update taxes with new values
             $taxes[$item->tax_id]=[
                 'Id'=>$tax_id,
                 'BaseImp'=>$BaseImp,
@@ -238,25 +265,35 @@ class Create extends Component
         if ($fiscal) {
             $afip = new Afip([
             'CUIT' => $cuit,
-            'production' => false,
+            'production' => $production,
             'cert' => 'DN1.crt',
             'key' => 'Private.key',
-            'environment' => 'homologation',
+            'environment' => $environment,
+            'exceptions'=>true,
             ]);
-        
-            $last_voucher = $afip->ElectronicBilling->GetLastVoucher($this->PtoVta,$this->CbteTipo)+1;
-        } else {
+
+            try { // to create ApiTokenForm ElectronicBilling
+                $last_voucher = $afip->ElectronicBilling->GetLastVoucher($this->PtoVta,$this->CbteTipo)+1;
+            } 
+            catch (\Exception $e) {
+                $this->afipError=$e->getMessage();
+                $this->afipModal=true;
+                return;
+            }
+
+        } else { // if not fiscal, create X document
+            // get last voucher
+            $this->PtoVta = 2; // HARDCODED
+            $this->CbteTipo = 2; // HARDCODED
+            // todo: get last voucher from database
             $last_voucher = rand(1,999999);
         }
 
-        if ($this->CbteTipo==1) {
-            $DocNro=$this->customer->CUIT;
-        } else {
-            $DocNro=$this->customer_id;
-        }
+        // if voucher==1 get CUIT else customer_id
+        $this->CbteTipo ==1 ? $DocNro=$this->customer->CUIT : $DocNro=$this->customer_id;
 
         $data = array(
-            'CantReg' 	=> 1,  // Cantidad de comprobantes a registrar
+            'CantReg' 	=> 1, // Cantidad de comprobantes a registrar
             'PtoVta' 	=> $this->PtoVta,  // Punto de venta
             'CbteTipo' 	=> $this->CbteTipo,  // Tipo de comprobante (ver tipos disponibles) 
             'Concepto' 	=> 1, //(int)$this->invoice_concepto,  // Concepto del Comprobante: (1)Productos, (2)Servicios, (3)Productos y Servicios
@@ -266,19 +303,14 @@ class Create extends Component
             'CbteHasta' => (int)$last_voucher,  // Número de comprobante o numero del último comprobante en caso de ser mas de uno
             'CbteFch' 	=> intval(date('Ymd')), // (Opcional) Fecha del comprobante (yyyymmdd) o fecha actual si es nulo
             'ImpTotal' 	=> $ImpTotal, // 121 Importe total del comprobante
-            'ImpTotConc' 	=> 0,   // Importe neto no gravado ***
+            'ImpTotConc' 	=> 0, // Importe neto no gravado ***
             'ImpNeto' 	=> $ImpNeto, // 100 Importe neto gravado
-            'ImpOpEx' 	=> 0,   // Importe exento de IVA ***
+            'ImpOpEx' 	=> 0, // Importe exento de IVA ***
             'ImpIVA' 	=> $AlicIVA,  // 21 Importe total de IVA
-            'ImpTrib' 	=> 0,   //Importe total de tributos
+            'ImpTrib' 	=> 0, //Importe total de tributos
             'MonId' 	=> 'PES', //Tipo de moneda usada en el comprobante (ver tipos disponibles)('PES' para pesos argentinos) 
-            'MonCotiz' 	=> 1,     // Cotización de la moneda usada (1 para pesos argentinos)  
+            'MonCotiz' 	=> 1, // Cotización de la moneda usada (1 para pesos argentinos)  
             'Iva' 		=> $taxes, // (Opcional) Alícuotas asociadas al comprobante
-                // array(
-                //     'Id' 		=> 5, // Id del tipo de IVA (5 para 21%)(ver tipos disponibles) 
-                //     'BaseImp' 	=> $ImpNeto,    // 100 Base imponible
-                //     'Importe' 	=> $AlicIVA     // 21 Importe 
-                // )
         );
 
         if($fiscal){
@@ -290,7 +322,7 @@ class Create extends Component
         } else {
             $res = [
                 'CAE' => '---- NO FISCAL ----',
-                'CAEFchVto' => '2022-12-31',
+                'CAEFchVto' => date('Y-m-d'),
             ];
         }
 
@@ -304,17 +336,14 @@ class Create extends Component
         // descontar stock del inventory del warehouse seleccionado
         foreach (Cart::content() as $item) {
             // get inventory quantity from warehouse
-            $inventory=\App\Models\Inventory::
-            where('product_id',$item->id)->
-            where('warehouse_id',$this->warehouse->id)->
-            decrement('quantity',$item->qty);
-
-            //dd($inventory, $item, $this->warehouse->id);
+            \App\Models\Inventory::where('product_id',$item->id)->
+                where('warehouse_id',$this->warehouse->id)->
+                decrement('quantity',$item->qty);
         }
 
         $res['CUIT']=$cuit;
         $data['res']=$res;
-        $data['items']=Cart::content();
+        $data['items']=$this->cartContentToArray(Cart::content()); // ver data desde function
         $data['itemDetail']=$itemDetail;
         session()->put('invoiceData',$data);
 
@@ -341,22 +370,8 @@ class Create extends Component
         //filter from $this->invoiceSaveName not valid characters
         $this->invoiceSaveName=preg_replace('/[^A-Za-z0-9_]/', '', $this->invoiceSaveName);
         // extract Cart content data in json format for later use
-        $data=[];
-        foreach (Cart::content() as $item) {
-            $data[]=[
-                'id'=>$item->id,
-                'qty'=>$item->qty,
-                'name'=>$item->name,
-                'price'=>$item->price,
-                'weight'=>$item->weight,
-                'options'=>$item->options,
-                'taxRate'=>$item->taxRate,
-                'discountRate'=>$item->discountRate,
-            ];
-        }
-
-        //dd($data,json_encode($data));
-        //save json file in public/storage/forLater/ folder
+        $data=$this->cartContentToArray(Cart::content());
+        //save json file in public/storage/laterUse/ folder
         $fileName='/private/laterUse/invoice-'.
             $this->customer->id.'-'.
             $this->invoiceSaveName.'.json';
