@@ -16,8 +16,8 @@ class DashboardController extends Controller
         $afip = new Afip([
             'CUIT' => (int) preg_replace('/[^0-9]/', '', \App\Models\Config::find('cuit')->value),
             'production' => \App\Models\Config::find('production')->value==1 ? true : false,
-            'cert' => 'DN1.crt',
-            'key' => 'Private.key',
+            'cert' => \App\Models\Config::find('afip_cert')->value,
+            'key' => \App\Models\Config::find('afip_key')->value,
             'environment' => \App\Models\Config::find('environment')->value,
             'exceptions'=>true,
             ]);
@@ -27,7 +27,6 @@ class DashboardController extends Controller
         foreach ($server_status as $key => $value) {
             $data[$key] = $value;
         }
-        
         $fiscal=(bool)\App\Models\Config::find('fiscal')->value;
         if ($fiscal) { // AFIP try access to last voucher
             //último comprobante p.de venta 1, comprobante 6 (Factura B)

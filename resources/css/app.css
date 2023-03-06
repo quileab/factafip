@@ -28,6 +28,10 @@ select, input{
   @apply bg-gray-50 text-gray-900 my-1 px-4 py-2 border-gray-500 focus:border-fuchsia-500 focus:ring focus:ring-fuchsia-500 focus:ring-opacity-50 rounded-md shadow-sm
 }
 
+option{
+  @apply inline-block;
+}
+
 tr:nth-child(even) {
   background-color: rgba(0, 0, 0, 0.05);
 }

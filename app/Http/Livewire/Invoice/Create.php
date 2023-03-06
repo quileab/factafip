@@ -22,6 +22,7 @@ class Create extends Component
     public $afipError = '';
     public $readyToLoad = false;
     public $debugging = false;
+    public $highlightIndex=0;
     
     // Livewire properties
     public $defaultPriceCol=1;
@@ -34,6 +35,7 @@ class Create extends Component
     public $warehouse;
     public $voucher_types=[];
     public $products=[];
+    public $selectedProduct;
     public $quantity=1;
     public $price=null;
     public $discount=0;
@@ -104,8 +106,7 @@ class Create extends Component
         return view('livewire.invoice.create',compact('cart','total_integer','total_decimal'));
     }
 
-    public function UpdatingProdSearch($search)
-    {
+    public function UpdatedProdSearch($search) {
         if (strlen($search)>2) {
             //$this->search = $search;
             $searchValues = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY);
@@ -115,7 +116,18 @@ class Create extends Component
                 }
             })->get();
         }else{
-            $this->emit('toast','Debe ingresar más de 2 caracteres','error');
+            if (strlen($search)!=0) {
+                $this->emit('toast', 'Debe ingresar más de 2 caracteres', 'error');
+            }
+        }
+        // --- selected product !! ---
+        if (strpos($search,'·')!==false) {
+            $this->defaultPriceCol='';
+            $this->selectedProduct=\App\Models\Product::
+                find(
+                    substr($search,0,strpos($search,'·'))
+                );
+            $this->emit('setfocus','priceDropdown');
         }
     }
 
@@ -155,6 +167,7 @@ class Create extends Component
     public function selectProduct($product_id){
         $this->products=\App\Models\Product::where('id', $product_id)->get();
         $this->discount = 0;
+        $this->price='';
         $this->emit('setfocus','priceDropdown');
     }
 
@@ -165,12 +178,6 @@ class Create extends Component
             $this->emit('toast','Precio por debajo de lo permitido','error');
             return;
         }
-        // $price=$price;
-        // if ($price==2) {
-        //     $price=$product->sale_price2;
-        // } else {
-        //     $price=$product->sale_price1;
-        // }
 
         $cartItem=Cart::add(
             $product->id,
@@ -179,9 +186,13 @@ class Create extends Component
             $price,0)->associate('App\Models\Product');
         Cart::setTax($cartItem->rowId,floatval($product->tax->value));
         Cart::setDiscount($cartItem->rowId,floatval($this->discount));
+
         $this->price=null;
-       
-        $this->openModal=false;
+        $this->selectedProduct=null;
+        $this->quantity=1;
+        $this->ProdSearch='';
+
+        $this->emit('setfocus','ProdSearch');
     }
 
     public function removeItem($rowId) {
@@ -264,13 +275,13 @@ class Create extends Component
         // create invoice using AFIP method - connect to AFIP
         if ($fiscal) {
             $afip = new Afip([
-            'CUIT' => $cuit,
-            'production' => $production,
-            'cert' => 'DN1.crt',
-            'key' => 'Private.key',
-            'environment' => $environment,
-            'exceptions'=>true,
-            ]);
+                'CUIT' => $cuit,
+                'production' => $production,
+                'cert' => \App\Models\Config::find('afip_cert')->value,
+                'key' => \App\Models\Config::find('afip_key')->value,
+                'environment' => $environment,
+                'exceptions'=>true,
+                ]);
 
             try { // to create ApiTokenForm ElectronicBilling
                 $last_voucher = $afip->ElectronicBilling->GetLastVoucher($this->PtoVta,$this->CbteTipo)+1;
@@ -380,4 +391,12 @@ class Create extends Component
         $this->openSaveModal=false;
         $this->invoiceSaveName='';
     }
+
+    public function resetSearch() {
+        $this->ProdSearch = '';
+        $this->selectedProduct =[];
+        $this->products = [];
+        $this->highlightIndex = 0;
+    }
+
 }
