@@ -221,18 +221,12 @@
     </x-slot>
   </x-jet-dialog-modal>
 
-  <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
+  <div class="mx-auto">
     <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
       <div class="flex justify-between px-3 py-2 text-white d2c">
-        <div class="flex">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="currentColor" viewBox="0 0 512 512"
-            stroke="currentColor">
-            <path
-              d="M462.807,128.836,260.141,43.5a10.673,10.673,0,0,0-8.281,0L49.193,128.836a10.67,10.67,0,0,0-6.526,9.831V373.333a10.674,10.674,0,0,0,6.526,9.833L251.859,468.5a10.7,10.7,0,0,0,8.281,0l202.667-85.333a10.674,10.674,0,0,0,6.526-9.833V138.667A10.67,10.67,0,0,0,462.807,128.836ZM256,212.427l-79.895-33.64,174.108-73.308a10.5,10.5,0,0,0,.935-.51l80.03,33.7Zm0-147.521,67.8,28.547L150.526,166.409a10.619,10.619,0,0,0-1.663.907L80.822,138.667ZM64,154.732l181.333,76.351V442.6L64,366.25ZM266.667,442.6V231.083L448,154.732V366.25Z" />
-          </svg>
-          <div class="ml-4 text-lg">
-            Productos
-          </div>
+        <div class="flex mt-2">
+          <x-svg.cube class="w-8 h-8" />
+          <div class="ml-4 text-lg">Productos</div>
         </div>
         <x-jet-input wire:model.lazy="search" type="search" class="w-full mx-3" placeholder="Buscar..." />
 

@@ -22,7 +22,7 @@ class CreateCustomersTable extends Migration
             $table->string('city',80)->nullable();
             $table->foreignIdFor(App\Models\ProvinceIdType::class)->constrained();
             $table->string('phone',40)->nullable();
-            $table->string('email',127)->unique();
+            $table->string('email',127)->unique()->nullable();
             $table->string('CUIT',11)->nullable();
             $table->foreignIdFor(App\Models\ResponsibilityType::class)->constrained();
             

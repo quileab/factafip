@@ -69,7 +69,7 @@ class Create extends Component
     }
 
     public function mount() {
-        $this->voucher_type_id=6;
+        //$this->voucher_type_id=6;
         $this->invoice_PtoVta=$this->PtoVta;
         //$this->invoice_type_id=$this->CbteTipo;
         // resto de los datos
@@ -135,33 +135,16 @@ class Create extends Component
         $search=$this->search;
         $this->search='';
         if (strlen($search)==13) {
-            $this->product=\App\Models\Product::where('barcode', $search)->first();
-            if ($this->product==null) {
+            $this->selectedProduct=\App\Models\Product::where('barcode', $search)->first();
+            if ($this->selectedProduct==null) {
                 $this->emit('toast','No se encontró el producto','error');
             }else{
-                $price=$this->defaultPriceCol==1?$this->product->sale_price1:$this->product->sale_price2;
-                $this->addToCart($this->product->id,$price);
+                $price=$this->defaultPriceCol==1?$this->selectedProduct->sale_price1:$this->selectedProduct->sale_price2;
+                $this->addToCart($this->selectedProduct->id,$price);
             }
         } else {
             $this->emit('toast','Error en código de barras','error');
         }
-    }
-
-    public function searchProductsModal(){
-    
-        if (Cart::content()->count()>30) {
-            $this->emit('toast','No se pueden agregar más de 30 productos','error');
-            return;
-        }
-
-        $this->reset('products','ProdSearch','discount');
-        $this->emit('setfocus','ProdSearch');
-
-        $this->quantity=1;
-        $this->barcode='';
-        $this->search='';
-
-        $this->openModal = true;
     }
 
     public function selectProduct($product_id){
@@ -172,6 +155,10 @@ class Create extends Component
     }
 
     public function addToCart($product,$price){
+        if (Cart::content()->count()>30) {
+            $this->emit('toast','No se pueden agregar más de 30 productos','error');
+            return;
+        }
         $product=\App\Models\Product::find($product);
         // check if $price is greater or equal than product's sale_price1
         if ($price<$product->sale_price1) {
@@ -302,7 +289,6 @@ class Create extends Component
 
         // if voucher==1 get CUIT else customer_id
         $this->CbteTipo ==1 ? $DocNro=$this->customer->CUIT : $DocNro=$this->customer_id;
-
         $data = array(
             'CantReg' 	=> 1, // Cantidad de comprobantes a registrar
             'PtoVta' 	=> $this->PtoVta,  // Punto de venta
@@ -339,7 +325,7 @@ class Create extends Component
 
         // si no existe $res['cae'] entonces no se pudo crear el comprobante fiscal
         if(!isset($res['CAE'])){
-            $this->afipError=utf8_decode($res);
+            $this->afipError=$res;
             $this->afipModal=true;
             return; // ERROR
         }
@@ -354,7 +340,8 @@ class Create extends Component
 
         $res['CUIT']=$cuit;
         $data['res']=$res;
-        $data['items']=$this->cartContentToArray(Cart::content()); // ver data desde function
+        // original $data['items']=$this->cartContentToArray(Cart::content()); // ver data desde function
+        $data['items']=Cart::content(); // ver data desde function
         $data['itemDetail']=$itemDetail;
         session()->put('invoiceData',$data);
 

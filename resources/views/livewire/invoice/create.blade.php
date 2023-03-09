@@ -68,16 +68,20 @@
         </div>
       </div>
 
-      <div class="flex px-4 py-0 justify-between">
+      <div class="flex gap-2 px-4 py-0 justify-between">
+        <x-jet-secondary-button wire:click="$toggle('searchType')" accesskey="x">
+          @if($searchType)
+            <x-svg.barcodeScan />
+          @else
+            <x-svg.search />
+          @endif
+        </x-jet-secondary-button>
         @if($searchType==true)
-        <div class="flex w-3/4 align-middle">
-          <x-jet-secondary-button wire:click="$toggle('searchType')" class="mr-1">
-          <x-svg.barcodeScan />
-          </x-jet-secondary-button>
+        <div class="flex align-middle">
           <x-jet-input wire:model.lazy="search" wire:keydown.enter='inputBarcode()' class="mr-1 py-1 w-max"
             type="text" />
 
-          <x-svg.collection class="inline mt-3 mr-1" />
+          <x-svg.collection class="inline mt-3 ml-3 mr-1 w-6 h-6" />
           <x-jet-input wire:model="quantity" class="mr-1 py-1" type="number" min="1" max="9999" />
           
           <select wire:model="defaultPriceCol" class="py-1 pr-8 mx-1 appearance-none">
@@ -85,12 +89,7 @@
             <option value="2">Precio 2</option>
           </select>
         </div>
-        @else
-        
-        <x-jet-secondary-button wire:click="$toggle('searchType')" class="mr-1">
-          <x-svg.search />
-        </x-jet-secondary-button>
-        
+        @else <!-- search by description -->
         <div class="flex flex-wrap gap-x-2 gap-y-1">
           <x-jet-input type="search" class="w-3/4" list="prods" autocomplete="off"
             accesskey="a"
@@ -109,12 +108,16 @@
           </datalist>
           @endif
           
-          <input list="prices" wire:model="price" id="priceDropdown" autocomplete="off" /></label>
+          <x-jet-input list="prices" wire:model="price" id="priceDropdown" autocomplete="off" />
           <datalist id="prices">
             <option value="{{$selectedProduct->sale_price1 ?? 0}}">
             <option value="{{$selectedProduct->sale_price2 ?? 0}}">
           </datalist> 
               
+          <x-svg.percent-solid class="mt-3 w-6 h-6" />
+          <x-jet-input wire:model="discount" autocomplete="off"
+            type="number" min="1" max="100" step=1 />
+          
           <div class="flex">
             <x-svg.collection class="mt-3 w-6 h-6" />
             <x-jet-input wire:model="quantity" class="mr-1 py-1" type="number" min="1" max="9999" />
@@ -174,12 +177,10 @@
 
       <div class="flex text-center">
       @if($total > 0)
-        <a href="#"
-        {{-- target="_blank"  --}}
-          class="px-3 py-1 text-white border-2 border-gray-700 rounded-md shadow-md bg-sky-700 hover:bg-sky-600"
-            wire:click="invoiceCreate">
+        <button class="px-3 py-1 text-white border-2 border-gray-700 rounded-md shadow-md bg-sky-700 hover:bg-sky-600"
+          wire:click="invoiceCreate">
           <x-svg.afip class="w-14 mr-2" />Facturar
-        </a>
+        </button>
 
         <a href="#"
           class="px-3 py-1 text-white border-2 border-gray-700 rounded-md shadow-md bg-green-700 hover:bg-green-600"

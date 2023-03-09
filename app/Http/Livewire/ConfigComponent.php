@@ -15,7 +15,7 @@ class ConfigComponent extends Component
     public $updateForm = false;
 
     public function render(){
-        $configs = \App\Models\Configs::get();
+        $configs = \App\Models\Configs::orderBy('description','ASC')->get();
         //dd($configs);
         return view('livewire.config-component', compact('configs'));
     }

@@ -9,10 +9,13 @@ class DashboardController extends Controller
     public function index()
     {
         $data=[];
-        /* 
-        El seteo de warehouse_id lo
-        hace AppServiceProvider
-        */
+        // definir el warehouse por defecto
+        if(!session()->has('warehouse_id')){
+            $default_warehouse= \App\Models\Config::find('warehouse_id')->value ?? null;
+            $default_warehouse_name= \App\Models\Warehouse::find($default_warehouse)->name ?? null;
+            session(['warehouse_id'=>$default_warehouse ?? null]);
+            session(['warehouse_name'=>$default_warehouse_name ?? null]);
+        }
         $afip = new Afip([
             'CUIT' => (int) preg_replace('/[^0-9]/', '', \App\Models\Config::find('cuit')->value),
             'production' => \App\Models\Config::find('production')->value==1 ? true : false,

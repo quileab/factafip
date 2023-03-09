@@ -88,14 +88,6 @@ $nav_links = [
       font-size: 1.2rem !important;
     }
 
-    .bg-img {
-      background-color: #fafafa;
-      background-image: url("{{ asset('img/wallpaper.jpg') }}");
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-    }
-
     body{
       color:black !important;
     }
@@ -182,7 +174,7 @@ $nav_links = [
                 </x-jet-dropdown-link>
               @endif
 
-              <div class="border-t border-gray-100"></div>
+              {{-- <div class="border-t border-gray-100"></div> --}}
 
               <!-- Team Management -->
               @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
@@ -201,7 +193,7 @@ $nav_links = [
                   </x-jet-dropdown-link>
                 @endcan
 
-                <div class="border-t border-gray-100"></div>
+                {{-- <div class="border-t border-gray-100"></div> --}}
 
                 <!-- Team Switcher -->
                 <div class="block px-4 py-2 text-xs text-gray-400">
@@ -242,7 +234,7 @@ $nav_links = [
     </div>
 
     {{-- content --}}
-    <div class="bg-img flex-1 py-0 mx-auto">
+    <div class="flex-1 py-0 mx-auto a2b">
       <!-- Page Content -->
       <main>
         {{ $slot }}

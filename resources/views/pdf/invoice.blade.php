@@ -235,7 +235,7 @@
             <td style="width:45%;" class="border text-left">
               <span class="font-lg font-bold">
                 {{ $data['inv_type'] }}
-              </span>&nbsp;
+              </span><br />&nbsp;
               <span class="font-md">{{ $data['ptoVta'] }}-{{ $data['invoice_number'] }}</span>
               <br />
               Fecha: {{ $data['invoice_date'] }}<br />
@@ -301,7 +301,7 @@
             <tr>
               <td class="border-left">{{ $item->id }}</td>
               <td class="border-left">{{ $item->qty }}</td>
-              <td class="border-left">{{ $item->model->unit->value }}</td>
+              <td class="border-left">{{ $item->model->unit->value ?? ''}}</td>
               <td class="text-left border-left">{{ $item->name }}</td>
               <td class="text-right border-left">{{ currency_format($item->price) }}</td>
               <td class="text-right border-left">{{ $item->discountRate }}%</td>

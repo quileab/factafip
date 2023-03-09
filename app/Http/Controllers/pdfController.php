@@ -17,7 +17,7 @@ class pdfController extends Controller
 
         $datos_qr = json_encode([
             "ver" => 1,
-            "fecha" => $data['CbteFch'],
+            "fecha" => substr($data['CbteFch'],0,4).'-'.substr($data['CbteFch'],4,2).'-'.substr($data['CbteFch'],6,2),
             "cuit" => $data['res']['CUIT'],
             "ptoVta" => (int) $data['PtoVta'],
             "tipoCmp" => (int) $data['CbteTipo'],

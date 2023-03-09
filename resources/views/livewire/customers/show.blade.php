@@ -8,15 +8,15 @@
 
     <x-slot name="content">
 
-      <div class="flex">
-        <div class="w-full ml-3">
+      <div class="flex gap-4">
+        <div class="w-full">
           <x-jet-label value="ID/DNI" />
           <x-jet-input type="number" wire:model.defer='customer_id' class="w-full" />
           <x-jet-input-error for="customer_id" />
         </div>
-        <div class="w-full ml-3">
+        <div class="w-full">
           <x-jet-label value="Tipo" />
-          <select wire:model.lazy="customer_id_type" name="customer_id_type" id="customer_id_type">
+          <select wire:model.lazy="customer_id_type" name="customer_id_type" id="customer_id_type" class="w-full">
             @foreach ($customers_id_type_id as $type_id)
               <option value="{{ $type_id->id }}">
                 {{ $type_id->id }}· {{ $type_id->value }}
@@ -26,14 +26,14 @@
         </div>
       </div>
 
-      <div class="flex w-full">
-        <div class="w-full ml-3">
+      <div class="flex gap-4">
+        <div class="w-full">
           <x-jet-label value="Apellido/s y Nombre/s" />
           <x-jet-input type='text' wire:model.lazy='customer_name' value="{{ $customer_name ?? '' }}"
             class="w-full" />
           <x-jet-input-error for="customer_name" />
         </div>
-        <div class="w-full ml-3">
+        <div class="w-full">
           <x-jet-label value="Nombre Empresa" />
           <x-jet-input type='text' wire:model.lazy='customer_business_name'
             value="{{ $customer_business_name ?? '' }}" class="w-full" />
@@ -41,14 +41,14 @@
         </div>
       </div>
 
-      <div class="flex">
-        <div class="w-full ml-3">
+      <div class="flex gap-4">
+        <div class="w-full">
           <x-jet-label value="CUIT" />
           <x-jet-input type='text' wire:model.lazy='customer_CUIT' value="{{ $customer_CUIT ?? '' }}"
             class="w-full" />
           <x-jet-input-error for="customer_CUIT" />
         </div>
-        <div class="w-full ml-3">
+        <div class="w-full">
           <x-jet-label value="Responsable tipo" />
           <select wire:model.lazy="customer_responsibility_type_id" name="customer_responsibility_type_id"
             id="customer_responsibility_type_id">
@@ -61,14 +61,14 @@
         </div>
       </div>
 
-      <div class="flex w-full">
-        <div class="w-full ml-3">
+      <div class="flex w-full gap-4">
+        <div class="w-full">
           <x-jet-label value="Dirección" />
           <x-jet-input type='text' wire:model.lazy='customer_address' value="{{ $customer_address ?? '' }}"
             class="w-full" />
           <x-jet-input-error for="customer_address" />
         </div>
-        <div class="w-full ml-3">
+        <div class="w-full">
           <x-jet-label value="Ciudad" />
           <x-jet-input type='text' wire:model.lazy='customer_city' value="{{ $customer_city ?? '' }}"
             class="w-full" />
@@ -76,10 +76,10 @@
         </div>
       </div>
 
-      <div class="flex flex-col ml-3">
+      <div class="flex gap-4">
         <x-jet-label value="Provincia" />
         <select wire:model.lazy="customer_province_id" name="customer_province_id"
-          id="customer_province_id">
+          id="customer_province_id" class="w-full">
           @foreach ($province_id_type_id as $province_type_id)
             <option value="{{ $province_type_id->id }}">
               {{ $province_type_id->id }}· {{ $province_type_id->value }}
@@ -88,13 +88,13 @@
         </select>
       </div>
 
-      <div class="flex">
-        <div class="w-full ml-3">
+      <div class="flex gap-4">
+        <div class="w-full">
           <x-jet-label value="EMail" />
           <x-jet-input type='email' wire:model.lazy='customer_email' value="{{ $customer_email ?? '' }}" class="w-full" />
           <x-jet-input-error for="customer_email" />
         </div>
-        <div class="w-full ml-3">
+        <div class="w-full">
           <x-jet-label value="Teléfono" />
           <x-jet-input type='tel' wire:model.lazy='customer_phone' value="{{ $customer_phone ?? '' }}" class="w-full" />
           <x-jet-input-error for="customer_phone" />
@@ -124,18 +124,12 @@
   </x-jet-dialog-modal>
 
 
-  <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
+  <div class="mx-auto">
     <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
       <div class="flex justify-between px-3 py-2 text-white d2c">
-        <div class="flex">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-          <div class="ml-4 text-lg">
-            Clientes
-          </div>
+        <div class="flex mt-2">
+          <x-svg.users class="w-8 h-8" />
+          <div class="ml-4 text-lg">Clientes</div>
         </div>
         <x-jet-input wire:model.lazy="search" type="search" class="w-full mx-3" placeholder="Buscar..." />
 

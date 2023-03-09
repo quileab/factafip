@@ -7,12 +7,14 @@
 }
 
 .d2c{
-  background: #72153d;
-  background: linear-gradient(270deg, #623f62 15%, #72153d 100%);
+  background: linear-gradient(270deg, #456b36 15%, #2350c3 100%);
 }
 .c2d{
-  background: #623f62;
-  background: linear-gradient(0deg, #623f62 15%, #72153d 100%);
+  background: linear-gradient(0deg, #31325d 15%, #2350c3 100%);
+}
+
+.a2b{
+  background: linear-gradient(0deg, #1e1e1e 15%, #323232 100%);
 }
 
 input:-webkit-autofill {

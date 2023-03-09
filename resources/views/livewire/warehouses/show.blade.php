@@ -71,7 +71,7 @@
     </x-slot>
   </x-jet-dialog-modal>
 
-  <div class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8">
+  <div class="mx-auto">
     <div class="overflow-hidden bg-gray-200 rounded-md shadow-xl">
       <div class="flex justify-between px-3 py-2 text-white d2c">
         <div class="flex ml-2 items-center">

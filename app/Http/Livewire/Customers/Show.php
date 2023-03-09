@@ -117,15 +117,16 @@ class Show extends Component
     {
         $this->validate([
             'customer_id' => 'required',
+            'customer_id_type' => 'required',
             'customer_name' => 'required',
-            'customer_business_name' => 'required',
+            //'customer_business_name' => 'required',
             'customer_address' => 'required',
             'customer_city' => 'required',
             'customer_province_id' => 'required',
-            'customer_phone' => 'required',
-            'customer_email' => 'required',
+            //'customer_phone' => 'required',
+            //'customer_email' => 'required',
             'customer_responsibility_type_id' => 'required',
-            'customer_CUIT' => 'required',
+            //'customer_CUIT' => 'required',
         ]);
 
         if ((integer)$this->customer->id != (integer)$this->customer_id)
@@ -163,10 +164,10 @@ class Show extends Component
             'customer_address' => 'required',
             'customer_city' => 'required',
             'customer_province_id' => 'required',
-            'customer_phone' => 'required',
-            'customer_email' => 'required',
+            //'customer_phone' => 'required',
+            //'customer_email' => 'required',
             'customer_responsibility_type_id' => 'required',
-            'customer_CUIT' => 'required',
+            //'customer_CUIT' => 'required',
         ]);
 
         $customer = new Customer();

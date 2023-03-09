@@ -1,11 +1,11 @@
 <div class="mb-3">
     <x-jet-dialog-modal wire:model="updateForm" icon='edit'>
         <x-slot name="title">
-            {{ $description }}
+            {{ $uid }}
         </x-slot>
 
         <x-slot name="content">
-            <small>{{ $uid }}</small>&nbsp;
+            {{ $description }}
             @if ($type == 'bool')
                 @if (strtolower($value) == 'true')
                     <x-jet-button color="green" wire:click="$set('value','false')">
@@ -21,10 +21,10 @@
                     </x-jet-button>
                 @endif
             @else
-                <x-jet-input wire:model='value' value={{ $value }} />
+                <x-jet-input wire:model='value' value={{ $value }} class="w-full shadow-md" />
             @endif
             <br>
-            <select name="type" wire:model.lazy='type' class="border border-gray-400 shadow-md">
+            <select name="type" wire:model.lazy='type' class="border border-gray-400 shadow-md w-full">
                 <option value="bool" @if ($type == 'bool') selected @endif>Bool</option>
                 <option value="str" @if ($type == 'str') selected @endif>Texto</option>
                 <option value="int" @if ($type == 'int') selected @endif>Número Entero</option>
@@ -56,11 +56,7 @@
                 <div class="flex flex-inline">
                 <x-jet-button wire:click="showModalForm({{ $config }})"
                     class="mr-4 pt-2 py-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                    class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
+                  <x-svg.edit />
                 </x-jet-button>
 
                 @if ($config->type == 'bool')
