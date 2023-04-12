@@ -13,7 +13,12 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2">
                     <div class="p-6">
-                      <p>Rol: undefined</p>
+                      <p><b>{{ \App\Models\Config::find('business_name')->value }}</b></p>
+                      <p>CUIT:<b>{{ \App\Models\Config::find('cuit')->value }}</b></p>
+                      <p><small>{{ \App\Models\Config::find('afip_key')->value }} ||
+                        {{ \App\Models\Config::find('afip_cert')->value }}</small></p>
+                      <p>Ambiente: <b>{{ \App\Models\Config::find('environment')->value }}</b></p>
+                      <p>Producc.: <b>{{ \App\Models\Config::find('production')->value }}</b></p>
                       <p>Depósito : <strong>{{ session()->get('warehouse_name') }}</strong></p>
                     </div>
                     <div class="p-6">

@@ -4,10 +4,10 @@ namespace App\Http\Livewire\Invoice;
 
 use Afip;
 use Livewire\Component;
-use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Storage;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+use function PHPUnit\Framework\isEmpty;
 
 class Create extends Component
 {
@@ -22,6 +22,7 @@ class Create extends Component
     public $afipError = '';
     public $readyToLoad = false;
     public $debugging = false;
+    public $rg5329 = true; // AFIP RG 5329/2023 enabled
     public $highlightIndex=0;
     
     // Livewire properties
@@ -93,12 +94,17 @@ class Create extends Component
         if (!$this->fiscal) {
             $this->CbteTipo=$this->voucher_types->first()->id;
         }
-
     }
 
     public function render() {
         $cart=Cart::content();
-        $this->total=number_format(Cart::subtotal(),2,'.','');
+        // check if cart is empty
+        if (count(Cart::content())) {
+            $data=$this->invoiceCreate(false); // false means just return data
+            $this->total=number_format($data['ImpTotal'],2,'.','');
+        } else {
+            $this->total=number_format(0,2,'.','');
+        }
         // format total
           $split=explode('.',$this->total);
           $total_integer=number_format($split[0],0,'','.');
@@ -211,8 +217,10 @@ class Create extends Component
         return $data;
     }
 
-    public function invoiceCreate(){
-        $fiscal=(bool)\App\Models\Config::find('fiscal')->value;
+    // @param $createInvoice false to return Data object
+    public function invoiceCreate(bool $createInvoice=true){
+        // false si solo debe RETORNAR los calculos
+        $createInvoice ? $fiscal=(bool)\App\Models\Config::find('fiscal')->value : $fiscal=false;
         $production=(bool)\App\Models\Config::find('production')->value;
         $environment=(string)\App\Models\Config::find('environment')->value;
         $decimals = config('cart.format.decimals', 2);
@@ -249,6 +257,7 @@ class Create extends Component
         $ImpNeto=0;
         $AlicIVA=0;
         // elimino los keys de impuesto y quito un nivel de array
+        // calculo Importe Neto y Alicuota de IVA
         $newarray=[];
         foreach($taxes as $tax){
           $ImpNeto=$ImpNeto+$tax['BaseImp'];
@@ -257,7 +266,35 @@ class Create extends Component
         }
         $taxes=$newarray;
 
-        $ImpTotal=round($ImpNeto+$AlicIVA,$decimals);
+        // RG5329/23 tributes from BaseImp (neto)
+        $tributes=[]; $importeTrib=0;
+        foreach ($taxes as $tax) {
+            switch ($tax['Id']) {
+                case 4:
+                    $importe=round($tax['BaseImp']*1.5/100, $decimals);
+                    $tributes[]=[
+                    'Id' 		=>  6, // Id del tipo de tributo (ver tipos disponibles)
+                    'Desc' 		=> 'RG 5326/23', // (Opcional) Descripcion
+                    'BaseImp' 	=> $tax['BaseImp'], // Base imponible para el tributo
+                    'Alic' 		=> 1.5, // Alícuota
+                    'Importe' 	=> $importe // Importe del tributo
+                    ];
+                    break;
+                case 5:
+                    $importe=round($tax['BaseImp']*3/100, $decimals);
+                    $tributes[]=[
+                    'Id' 		=>  6, // Id del tipo de tributo (ver tipos disponibles)
+                    'Desc' 		=> 'RG 5326/23', // (Opcional) Descripcion
+                    'BaseImp' 	=> $tax['BaseImp'], // Base imponible para el tributo
+                    'Alic' 		=> 3, // Alícuota
+                    'Importe' 	=> $importe // Importe del tributo
+                    ];
+                    break;
+            }
+            $importeTrib=$importeTrib+$importe;
+        }
+
+        $ImpTotal=round($ImpNeto+$importeTrib+$AlicIVA,$decimals);
 
         // create invoice using AFIP method - connect to AFIP
         if ($fiscal) {
@@ -309,6 +346,10 @@ class Create extends Component
             'MonCotiz' 	=> 1, // Cotización de la moneda usada (1 para pesos argentinos)  
             'Iva' 		=> $taxes, // (Opcional) Alícuotas asociadas al comprobante
         );
+        if ($this->rg5329){
+            $data['Tributos']=$tributes;
+            $data['ImpTrib']=$importeTrib;
+        }
 
         if($fiscal){
             try{
@@ -322,6 +363,11 @@ class Create extends Component
                 'CAEFchVto' => date('Y-m-d'),
             ];
         }
+        // /////// return data
+        if ($createInvoice==false){
+            return $data;
+        }
+        // /////// return
 
         // si no existe $res['cae'] entonces no se pudo crear el comprobante fiscal
         if(!isset($res['CAE'])){

@@ -137,6 +137,7 @@
         @endif
         <div class="text-center pt-2 w-1/4 text-4xl bg-gray-50">
           <small>$</small> <strong>{{ $total_integer }}</strong>,<sup>{{ $total_decimal }}</sup><br />
+          
         </div>
       </div>
 
