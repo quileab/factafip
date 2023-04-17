@@ -135,9 +135,27 @@
           </div>
 
         @endif
-        <div class="text-center pt-2 w-1/4 text-4xl bg-gray-50">
+        <div class="text-right px-2 pt-1 w-1/4 bg-gray-50">
+          <div>
+            <p>
+            @forelse ($ivas as $iva)
+              IVA $ {{ number_format($iva['Importe'], 2, ',', '.') }}
+            @empty
+              IVA: $ 0.00
+            @endforelse
+            </p>
+            <p>
+            @forelse ($tributos as $tributo)
+              {{ $tributo['Desc'] }}: $ {{ number_format($tributo['Importe'], 2, ',', '.') }}
+            @empty
+              IVA: $ 0.00
+            @endforelse
+            </p>
+          </div>
+
+          <div class="text-4xl">
           <small>$</small> <strong>{{ $total_integer }}</strong>,<sup>{{ $total_decimal }}</sup><br />
-          
+          </div>
         </div>
       </div>
 

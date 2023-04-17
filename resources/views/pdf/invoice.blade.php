@@ -303,7 +303,7 @@
               <td class="border-left">{{ $item->qty }}</td>
               <td class="border-left">{{ $item->model->unit->value ?? ''}}</td>
               <td class="text-left border-left">{{ $item->name }}</td>
-              <td class="text-right border-left">{{ currency_format($item->price) }}</td>
+              <td class="text-right border-left">{{ number_format($item->price, 2, ',', '.') }}</td>
               <td class="text-right border-left">{{ $item->discountRate }}%</td>
               @if ($data['inv_letter'] == 'A')
                 <td class="text-right border-left">
@@ -332,6 +332,12 @@
             <tr>
               <td colspan="{{ $data['inv_letter'] === 'A' ? 7:5 }}" class="text-right">IVA {{ $iva['Id'] }}</td>
               <td colspan="2" class="text-right">{{ currency_format($iva['Importe']) }}</td>
+            </tr>
+          @endforeach
+          @foreach ($data['Tributos'] as $trib)
+            <tr>
+              <td colspan="{{ $data['inv_letter'] === 'A' ? 7:5 }}" class="text-right">{{ $trib['Desc'] }}</td>
+              <td colspan="2" class="text-right">{{ currency_format($trib['Importe']) }}</td>
             </tr>
           @endforeach
           <tr>
