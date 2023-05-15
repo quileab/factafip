@@ -104,7 +104,7 @@ class Create extends Component
             //dd($data);
             $this->total=number_format($data['ImpTotal'],2,'.','');
             $ivas=$data['Iva'];
-            $tributos=$data['Tributos'];
+            $tributos=$data['Tributos'] ?? [];
         } else {
             $this->total=number_format(0,2,'.','');
             $ivas=[];
@@ -360,7 +360,7 @@ class Create extends Component
             'MonId' 	=> 'PES', //Tipo de moneda usada en el comprobante (ver tipos disponibles)('PES' para pesos argentinos) 
             'MonCotiz' 	=> 1, // Cotización de la moneda usada (1 para pesos argentinos)  
             'Iva' 		=> $taxes, // (Opcional) Alícuotas asociadas al comprobante
-            'Tributos'  =>[],
+            //'Tributos'  =>[], // assigned later on
         );
         if (($this->rg5329) && ($this->CbteTipo==1)){
             $trib=$this->calcTributes($taxes);

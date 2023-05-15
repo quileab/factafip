@@ -334,12 +334,15 @@
               <td colspan="2" class="text-right">{{ currency_format($iva['Importe']) }}</td>
             </tr>
           @endforeach
-          @foreach ($data['Tributos'] as $trib)
-            <tr>
-              <td colspan="{{ $data['inv_letter'] === 'A' ? 7:5 }}" class="text-right">{{ $trib['Desc'] }}</td>
-              <td colspan="2" class="text-right">{{ currency_format($trib['Importe']) }}</td>
-            </tr>
-          @endforeach
+
+          @if(isset($data['Tributos']))
+            @foreach ($data['Tributos'] as $trib)
+              <tr>
+                <td colspan="{{ $data['inv_letter'] === 'A' ? 7:5 }}" class="text-right">{{ $trib['Desc'] }}</td>
+                <td colspan="2" class="text-right">{{ currency_format($trib['Importe']) }}</td>
+              </tr>
+            @endforeach
+          @endif
           <tr>
             <td colspan="{{ $data['inv_letter'] === 'A' ? 7:5 }}" class="border-left border-right text-right">
               <strong>Total</strong>
