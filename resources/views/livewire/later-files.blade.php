@@ -25,6 +25,9 @@
                   <x-jet-button wire:click="invoice('{{ urlencode(basename($file)) }}')" class="mr-1">
                     <x-svg.fileInvoice /> Abrir
                   </x-jet-button>
+                  <x-jet-danger-button wire:click="delete('{{ urlencode(basename($file)) }}')" class="mr-1">
+                    <x-svg.trash />
+                  </x-jet-danger-button>
                 </div>
               </div>
             </div>

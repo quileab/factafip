@@ -251,9 +251,12 @@
       <table id="FiscalData">
         <tr>
           <td class="borderless" style="width:3cm;">
+            @if($data['CbteTipo']<5000)
             <img src="data:image/svg+xml;base64, {!! base64_encode(QrCode::format('svg')->errorCorrection('H')->size(100)->generate($datos_qr),) !!} ">
+            @endif
           </td>
           <td class="borderless text-left">
+            @if($data['CbteTipo']<5000)
             <img style="height:0.9cm; width:auto;" src="{{ public_path() . '/img/logo_afip.png' }}">
             <div class="text-right" style="display: inline-block; width:12cm;">
               <span>CAE Nº: <strong>{{ $data['res']['CAE'] }}</strong></span><br />
@@ -262,6 +265,7 @@
             <p>Comprobante Autorizado</p>
             <p class="font-xsm">Esta Administración Federal no se responsabiliza por los datos ingresados en el
               detalle de la operación.</p>
+            @endif
           </td>
         </tr>
       </table>
@@ -285,7 +289,7 @@
           <tr>
             <th style="width:5%; overflow:hidden;" class="border-top border-left">Cód.</th>
             <th style="width:10%;" class="border-top border-left">Cant.</th>
-            <th style="width:10%;" class="border-top border-left">U. med.</th>
+            <th style="width:10%;" class="border-top border-left">u/m</th>
             <th style="width:60%;" class="border-top border-left">Descripción</th>
             <th style="width:15%;" class="border-top border-left">Precio Unitario</th>
             <th style="width:10%;" class="border-top border-left">% Desc.</th>

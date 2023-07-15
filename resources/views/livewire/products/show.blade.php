@@ -237,22 +237,24 @@
         <table class="table-auto w-full">
           <thead>
             <tr class="bg-gray-800 text-white">
-              <th class="px-4 py-2">ID</th>
-              <th class="px-4 py-2">Categ.</th>
-              <th class="px-4 py-2">Marca</th>
-              <th class="px-4 py-2">Producto/Modelo</th>
-              <th class="px-4 py-2">Descripción</th>
-              <th class="px-4 py-2">Acciones</th>
+              <th class="px-2 py-2 text-sm">ID/Cat.</th>
+              <th class="px-2 py-2 text-sm">Marca · Producto/Modelo</th>
+              <th class="px-2 py-2">Descripción</th>
+              <th class="px-2 py-2 text-sm">Acciones</th>
             </tr>
           </thead>
           <tbody>
             @foreach ($products as $product)
               <tr>
-                <td class="px-4 py-1">{{ $product->id }}</td>
-                <td class="px-4 py-1">{{ $product->category->name }}</td>
-                <td class="px-4 py-1">{{ $product->brand }}</td>
-                <td class="px-4 py-1">{{ $product->model }}</td>
-                <td class="px-4 py-1">{{ $product->description }}</td>
+                <td class="px-2 py-1 text-sm">{{ $product->id }}<br />{{ $product->category->name }}</td>
+                <td class="px-2 py-1 text-sm">{{ $product->brand }}<br />{{ $product->model }}</td>
+                <td class="px-2 py-0.5">
+                  <b>{{ $product->description }}</b>
+                  <div class="w-full flex justify-evenly">
+                  <span>🏷️${{ $product->sale_price1 }}</span>
+                  <span>🏷️${{ $product->sale_price2 }}</span>
+                  </div>
+                </td>
                 <td class="px-1 py-1 text-right inline-flex">
                   <x-jet-button wire:click="edit({{ $product->id }})" class="mr-1">
                     <x-svg.edit />

@@ -83,6 +83,13 @@ class Show extends Component
         $this->render();
     }
 
+    public function updatingProductPrice($value){
+        $this->product_price=$value;
+        $this->calcSalePrice(1);
+        $this->calcSalePrice(2);
+
+    }
+
     public function newProduct(){
         // reset properties
         $this->reset([
@@ -229,8 +236,7 @@ class Show extends Component
         $this->render();
     }
 
-    public function calcSalePrice($n)
-    {
+    public function calcSalePrice($n){
       $decimals=config('cart.format.decimals', 2);
       switch ($n) {
         case 1:

@@ -57,9 +57,9 @@ class Create extends Component
     public $invoice_currency_id;
 
     // listen to redirect event
-    protected $listeners = [
-        'voucherReset' => 'voucherReset',
-    ];
+    // protected $listeners = [
+    //     'voucherReset' => 'voucherReset',
+    // ];
 
     // function listen to redirect event
     public function voucherReset()
@@ -67,6 +67,7 @@ class Create extends Component
         Cart::destroy();
         $this->emit('toast','Factura creada correctamente','success');
         $this->render();
+        return;
     }
 
     public function mount() {
@@ -76,24 +77,22 @@ class Create extends Component
         // resto de los datos
         $this->customer=\App\Models\Customer::find($this->customer_id);
         if ($this->customer==null) {
-            $this->customer_id=0;
+            $this->customer_id=100;
             $this->customer=\App\Models\Customer::find($this->customer_id);
         }
         $this->warehouse=\App\Models\Warehouse::find(session('warehouse_id'));
         if ($this->warehouse==null) {
             $this->emit('toast','No se encontró el Depósito','error');
+            return redirect()->route('dashboard');
         }
+        $this->warehouse=$this->warehouse->toArray();
 
-        // if fiscal enabled read 'enabled voucher types' else NON FIscal types
-        $this->fiscal=(bool)\App\Models\Config::find('fiscal')->value;
+        $this->fiscal=(bool)\App\Models\Config::where('id','fiscal')->first()->value;
         $this->voucher_types=\App\Models\VoucherType::where('enabled', true)
             ->when(!$this->fiscal, function($query) {
                 return $query->where('id','>', 5000);
             })->get();
-
-        if (!$this->fiscal) {
             $this->CbteTipo=$this->voucher_types->first()->id;
-        }
     }
 
     public function render() {
@@ -263,6 +262,9 @@ class Create extends Component
     public function invoiceCreate(bool $createInvoice=true){
         // false si solo debe RETORNAR los calculos
         $createInvoice ? $fiscal=(bool)\App\Models\Config::find('fiscal')->value : $fiscal=false;
+        if ($this->CbteTipo>5000){
+            $fiscal=false;
+        }
         $production=(bool)\App\Models\Config::find('production')->value;
         $environment=(string)\App\Models\Config::find('environment')->value;
         $decimals = config('cart.format.decimals', 2);
@@ -328,15 +330,16 @@ class Create extends Component
                 $this->afipModal=true;
                 return;
             }
-
         } else { // if not fiscal, create X document
-            // set defaults
-            if ($createInvoice==true){
-                $this->PtoVta = 2; // HARDCODED
-                $this->CbteTipo = 2; // HARDCODED
-                // todo: get last voucher from database
+            // get last voucher number from configs table using cbteTipo and ptoVta as key if not exists create it
+            $last_voucher = \App\Models\Config::where('id',$this->CbteTipo.'-'.$this->PtoVta)->value('value');
+            if (!$last_voucher) {
+                \App\Models\Config::create([
+                    'id' => $this->CbteTipo.'-'.$this->PtoVta,
+                    'value' => 1,
+                    'description' => 'z9) Non Fiscal'
+                    ]);
             }
-            $last_voucher = rand(1,999999);
         }
 
         // if voucher==1 get CUIT else customer_id
@@ -403,7 +406,7 @@ class Create extends Component
         foreach (Cart::content() as $item) {
             // get inventory quantity from warehouse
             \App\Models\Inventory::where('product_id',$item->id)->
-                where('warehouse_id',$this->warehouse->id)->
+                where('warehouse_id',$this->warehouse['id'])->
                 decrement('quantity',$item->qty);
         }
 
@@ -423,10 +426,14 @@ class Create extends Component
         $voucher->data=$data;
         $voucher->save();
 
-        //$res['CAE']; //CAE asignado el comprobante
-        //$res['CAEFchVto']; //Fecha de vencimiento del CAE (yyyy-mm-dd)
-        
-        $this->emitSelf('voucherReset');
+        //if not fiscal, update configs table last_voucher counter
+        if(!$fiscal) {
+            \App\Models\Config::where('id', $this->CbteTipo.'-'.$this->PtoVta)->
+                update(['value' => $last_voucher+1]);
+        }
+
+        //$this->emitSelf('voucherReset');
+        $this->voucherReset();
         
         return redirect()->route('pdf.invoice');
     }

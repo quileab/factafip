@@ -74,6 +74,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/invoices/{customer_id?}/{CbteTipo?}/{PtoVta?}', App\Http\Livewire\Invoice\Create::class)->name('invoices');
     // LaterFiles Route class
     Route::get('/laterfiles', App\Http\Livewire\LaterFiles::class)->name('laterfiles');
+    Route::get('/managefiles', App\Http\Livewire\ManageFiles::class)->name('managefiles');
+    Route::get('/files/{file}', function($file){
+        if (!auth()->user()){
+            abort(404);
+        }
+        $filepath=public_path('storage/invoices/'.$file);
+        return response()->file($filepath);
+        })->name('files');
     
     // Inform to user that Printed Document is ready to download
     Route::get('/printed/{filename?}', function ($filename) { 

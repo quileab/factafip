@@ -48,16 +48,16 @@ $nav_links = [
     //   'active' => request()->routeIs('payplans'),
     //   'permission'=>'menu.payplans',
     // ],
-    // [
-    //   'name' => 'Roles & Permisos',
-    //   'route' => route('permissions'),
-    //   'active' => request()->routeIs('permissions'),
-    //   'permission'=>'menu.security',
-    // ],
     [
       'name' => 'Configuración',
       'route' => route('configs'),
       'active' => request()->routeIs('configs'),
+      'permission'=>'menu.config',
+    ],
+    [
+      'name' => '🗃️ Facturas PDF',
+      'route' => route('managefiles'),
+      'active' => request()->routeIs('managefiles'),
       'permission'=>'menu.config',
     ],
 ];

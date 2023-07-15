@@ -47,4 +47,11 @@ class LaterFiles extends Component
         return redirect()->route('invoices',['customer_id'=>$customer_id]);
     }
 
+    public function delete($file){
+        $file=urldecode($file);
+        Storage::disk('local')->delete('/private/laterUse/'.$file);
+        $this->files = Storage::files('private/laterUse');
+        $this->render();
+    }
+
 }
