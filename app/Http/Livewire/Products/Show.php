@@ -84,10 +84,10 @@ class Show extends Component
     }
 
     public function updatingProductPrice($value){
-        $this->product_price=$value;
+        $decimals=config('cart.format.decimals', 2);
+        $this->product_price=number_format($value,$decimals,'.','');
         $this->calcSalePrice(1);
         $this->calcSalePrice(2);
-
     }
 
     public function newProduct(){
@@ -240,10 +240,10 @@ class Show extends Component
       $decimals=config('cart.format.decimals', 2);
       switch ($n) {
         case 1:
-          $this->product_sale_price1=number_format($this->product_price+($this->product_price*$this->product_profit_percentage1/100),$decimals);
+          $this->product_sale_price1=number_format($this->product_price+($this->product_price*$this->product_profit_percentage1/100),$decimals,'.','');
           break;
         case 2:
-          $this->product_sale_price2=number_format($this->product_price+($this->product_price*$this->product_profit_percentage2/100),$decimals);
+          $this->product_sale_price2=number_format($this->product_price+($this->product_price*$this->product_profit_percentage2/100),$decimals,'.','');
           break;
         default:
           return 0;

@@ -98,7 +98,8 @@
             @if(!empty($products))
             <datalist id="prods">
               @foreach($products as $i => $product)
-              <option value="{{ $product->id }}· {{ $product->description }} / {{ $product->brand }}: {{ $product->model }}" />
+              <option value="{{ $product->id }}· {{ $product->description }} /🏷️ {{ $product->sale_price1 ?? 0 }} /🏷️ {{ $product->sale_price2 ?? 0 }}
+                " />
               @endforeach
             </datalist>
             @endif

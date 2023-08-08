@@ -77,7 +77,7 @@ class Create extends Component
         // resto de los datos
         $this->customer=\App\Models\Customer::find($this->customer_id);
         if ($this->customer==null) {
-            $this->customer_id=100;
+            $this->customer_id=0;
             $this->customer=\App\Models\Customer::find($this->customer_id);
         }
         $this->warehouse=\App\Models\Warehouse::find(session('warehouse_id'));
@@ -179,7 +179,9 @@ class Create extends Component
 
         $cartItem=Cart::add(
             $product->id,
-            $product->brand.': '.$product->model.': '.$product->description,
+            // TODO: Evaluate the inforation to show in document
+            // $product->brand.': '.$product->model.': '.$product->description,
+            $product->description,
             $this->quantity,
             $price,0)->associate('App\Models\Product');
         Cart::setTax($cartItem->rowId,floatval($product->tax->value));
@@ -453,6 +455,7 @@ class Create extends Component
         Storage::disk('local')->put($fileName,json_encode($data));
         $this->openSaveModal=false;
         $this->invoiceSaveName='';
+        Cart::destroy();
     }
 
     public function resetSearch() {

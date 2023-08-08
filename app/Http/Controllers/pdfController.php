@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use stdClass;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use stdClass;
 
 class pdfController extends Controller
 {
@@ -13,7 +13,7 @@ class pdfController extends Controller
         //$items=new stdClass();
         $items=(object)$data['items'];
 
-        //dd($data, $items);
+        // dd($data, $items);
 
         $datos_qr = json_encode([
             "ver" => 1,
@@ -94,6 +94,23 @@ class pdfController extends Controller
     public function qrcode(){
         $qr=QrCode::format('png')->size(300)->generate('http://www.google.com');
         return $qr;
+    }
+
+    public function ListVouchers($CbteTipo,$PtoVta,$FchDesde,$FchHasta){
+        $CbteTipoDesc=\App\Models\VoucherType::find($CbteTipo)->value;
+        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $FchDesde)->startOfDay();
+        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $FchHasta)->endOfDay();
+        
+        $vouchers=\App\Models\Voucher::whereBetween('created_at', [$startDate, $endDate])
+        ->where('id','like', "$CbteTipo-$PtoVta-%")
+        ->get()
+        ->toArray();
+        // dd($CbteTipo, $PtoVta, $FchDesde, $FchHasta,"$CbteTipo-$PtoVta-%",
+        //     $CbteTipoDesc,
+        //     //$startDate,$endDate,
+        //     $vouchers);
+        
+        return view('List-Vouchers', compact('vouchers','CbteTipoDesc'));
     }
 
 }

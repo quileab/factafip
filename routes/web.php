@@ -5,6 +5,7 @@ use App\Http\Livewire\ConfigComponent;
 use App\Http\Controllers\pdfController;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\DashboardController;
+use App\Http\Livewire\Reports;
 
 Route::get('/', function () {
     // return view('welcome');
@@ -67,6 +68,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/pdf/invoice', [pdfController::class,'invoice'])->name('pdf.invoice');
     Route::get('/pdf/qrcode', [pdfController::class,'qrcode'])->name('pdf.qrcode');
     Route::get('/pdf/htmlinvoice', [pdfController::class,'htmlinvoice'])->name('pdf.htmlinvoice');
+    Route::get('/report-Invoices/{CbteTipo}/{PtoVta}/{FchDesde}/{FchHasta}',
+        [pdfController::class,'ListVouchers'])->name('report-Invoices');
+    
+    Route::get('/reports', App\Http\Livewire\Reports::class)->name('reports');
 
     Route::get('/customers', App\Http\Livewire\Customers\Show::class)->name('customers');
     Route::get('/warehouses', App\Http\Livewire\Warehouses\Show::class)->name('warehouses');

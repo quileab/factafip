@@ -60,6 +60,12 @@ $nav_links = [
       'active' => request()->routeIs('managefiles'),
       'permission'=>'menu.config',
     ],
+    [
+      'name' => '📄 Reportes',
+      'route' => route('reports'),
+      'active' => request()->routeIs('reports'),
+      'permission'=>'menu.invoices',
+    ],
 ];
 @endphp
 <!DOCTYPE html>
