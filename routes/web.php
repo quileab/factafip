@@ -70,6 +70,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/pdf/htmlinvoice', [pdfController::class,'htmlinvoice'])->name('pdf.htmlinvoice');
     Route::get('/report-Invoices/{CbteTipo}/{PtoVta}/{FchDesde}/{FchHasta}',
         [pdfController::class,'ListVouchers'])->name('report-Invoices');
+    Route::get('/report-Accounting/{PtoVta}/{FchDesde}/{FchHasta}',
+        [pdfController::class,'ListAccounting'])->name('report-Accounting');
     
     Route::get('/reports', App\Http\Livewire\Reports::class)->name('reports');
 

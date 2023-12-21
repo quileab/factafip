@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use stdClass;
-use Illuminate\Http\Request;
+use ArgumentCountError;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Storage;
 
-class pdfController extends Controller
-{
+class pdfController extends Controller{
     public function invoice(){
         $data=session('invoiceData');
         //$items=new stdClass();
@@ -105,12 +104,83 @@ class pdfController extends Controller
         ->where('id','like', "$CbteTipo-$PtoVta-%")
         ->get()
         ->toArray();
-        // dd($CbteTipo, $PtoVta, $FchDesde, $FchHasta,"$CbteTipo-$PtoVta-%",
-        //     $CbteTipoDesc,
-        //     //$startDate,$endDate,
-        //     $vouchers);
         
         return view('List-Vouchers', compact('vouchers','CbteTipoDesc'));
+    }
+
+    public function ListAccounting($PtoVta,$FchDesde,$FchHasta){
+        $vouchers_enabled=\App\Models\VoucherType::where('id','<',5000)
+            ->where('enabled','1')->get()->toArray();
+
+        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $FchDesde)->startOfDay();
+        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $FchHasta)->endOfDay();
+
+        // create text file in storage path
+        if (! Storage::put('VENTAS.prn', 
+        'Fecha dd/mmCpbteTipoSuc.  Número      Razón Social o Denominación Cliente      Tipo     CUIT                 Domicilio             C.P.PciaCondCód.Neto Gravado  Alíc.  IVA LiquidaIVA Débito Cód. Conceptos NGCód.  Perc./Ret. Pcia')) {
+            return false;// The file could not be written to disk...
+        }
+        
+        // loop all Enabled Fiscal Voucher Types record
+        foreach($vouchers_enabled as $voucher_enabled) {
+            $id=$voucher_enabled['id'];
+            $vouchers=\App\Models\Voucher::whereBetween('created_at', [$startDate, $endDate])
+            ->where('id','like', "$id-$PtoVta-%")
+            ->get()
+            ->toArray();
+
+            // loop Vouchers
+            foreach($vouchers as $voucher) {
+                $CbteFch=\Carbon\Carbon::createFromFormat('Ymd', $voucher['data']['CbteFch'])->format('d/m/Y');
+                $CbteTipoDesc=\App\Models\VoucherType::find($voucher['data']['CbteTipo'])->toArray();
+                $Cbte=str_pad(substr($CbteTipoDesc['type'],0,5),5," ",STR_PAD_RIGHT).$CbteTipoDesc['letter'];
+                $PtVt=str_pad($voucher['data']['PtoVta'],4," ",STR_PAD_LEFT);
+                $Nro=str_pad($voucher['data']['CbteDesde'],8,"0",STR_PAD_LEFT);
+                $DocTipo=$voucher['data']['DocTipo'];
+                $DocNro=str_pad(substr($voucher['data']['DocNro'],0,11),11,'0',STR_PAD_LEFT);
+                $Cliente=\App\Models\Customer::find($DocNro);
+                if ($Cliente==null){
+                    echo"<h2>Cliente NO ENCONTRADO » </h2>CUIT/DNI: $DocNro";
+                    return false;
+                }
+                $Nombre=str_pad(substr(
+                    // replace unicode multibyte characters
+                    preg_replace('/[^\x20-\x7E]/','', $Cliente['business_name'])
+                    ,0,45),45," ",STR_PAD_RIGHT);
+                    $Respons=\App\Models\ResponsibilityType::find(
+                        $Cliente['responsibility_type_id']
+                        )->toArray();               
+                        $RespAbbr=$Respons['abbr'];
+                        
+                $Cliente=$Cliente->toArray();
+
+                // loop IVA types
+                foreach($voucher['data']['Iva'] as $iva) {
+                    $AlicId=$iva['Id'];
+                    $Alicuota=\App\Models\TaxConditionType::find($AlicId)->toArray();
+                    $Alicuota=str_pad(
+                        number_format($Alicuota['value'],3,',',''),
+                        6,' ',STR_PAD_RIGHT
+                    );
+                    $Neto=str_pad(
+                        number_format($iva['BaseImp'],2,',',''),
+                        13,' ',STR_PAD_LEFT
+                    );
+                    $ImpIva=str_pad(
+                        number_format($iva['Importe'],2,',',''),
+                        11,' ',STR_PAD_LEFT
+                    );
+
+                    Storage::append('VENTAS.prn', 
+                    "$CbteFch $Cbte$PtVt    $Nro $Nombre$DocTipo  $DocNro                                             $RespAbbr      $Neto $Alicuota $ImpIva$ImpIva"
+                    );
+
+                }
+            }
+        }
+        
+        return response()->download(storage_path('app/VENTAS.prn'));
+        //return response()->file(storage_path('app/VENTAS.prn'));
     }
 
 }

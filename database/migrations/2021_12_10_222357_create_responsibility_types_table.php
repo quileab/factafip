@@ -16,6 +16,7 @@ class CreateResponsibilityTypesTable extends Migration
         Schema::create('responsibility_types', function (Blueprint $table) {
             $table->id();
             $table->string('value');
+            $table->string('abbr',4)->nullable();
             //$table->timestamps();
         });
     }
