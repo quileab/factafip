@@ -73,6 +73,7 @@ class Create extends Component
     public function mount() {
         //$this->voucher_type_id=6;
         $this->invoice_PtoVta=$this->PtoVta;
+        $this->rg5329=false;
         //$this->invoice_type_id=$this->CbteTipo;
         // resto de los datos
         $this->customer=\App\Models\Customer::find($this->customer_id);
@@ -227,6 +228,7 @@ class Create extends Component
     function calcTributes(array $Ivas){
         $decimals = config('cart.format.decimals', 2);
         $taxes=&$Ivas;// arreglar
+        $this->rg5329=false;
         // RG5329/23 tributes from BaseImp (neto)
         $tributes=[]; $importeTrib=0;
         foreach ($taxes as $tax) {
@@ -254,6 +256,10 @@ class Create extends Component
             }
             $importeTrib=$importeTrib+$importe;
         }
+        if ($importeTrib<3000){
+            return;
+        }
+        $this->rg5329=true;
         return [
             'tributes'=>$tributes,
             'impTrib'=>$importeTrib
@@ -367,8 +373,9 @@ class Create extends Component
             'Iva' 		=> $taxes, // (Opcional) Alícuotas asociadas al comprobante
             //'Tributos'  =>[], // assigned later on
         );
-        if (($this->rg5329) && ($this->CbteTipo==1)){
-            $trib=$this->calcTributes($taxes);
+        //if (($this->rg5329) && ($this->CbteTipo==1)){
+        $trib=$this->calcTributes($taxes);
+        if (($this->CbteTipo==1) && ($this->rg5329)){
             $data['Tributos']=$trib['tributes'];// $tributes;
             $data['ImpTrib']=$trib['impTrib'];//$importeTrib;
         }
@@ -382,7 +389,6 @@ class Create extends Component
         }
         // /////// return ---------------------------***
 
-
         if($fiscal){
             try{
                 $res = $afip->ElectronicBilling->CreateVoucher($data);
@@ -395,7 +401,6 @@ class Create extends Component
                 'CAEFchVto' => date('Y-m-d'),
             ];
         }
-
 
         // si no existe $res['cae'] entonces no se pudo crear el comprobante fiscal
         if(!isset($res['CAE'])){
